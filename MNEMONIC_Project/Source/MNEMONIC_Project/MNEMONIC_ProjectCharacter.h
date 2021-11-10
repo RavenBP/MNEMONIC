@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Combat.h"
+#include "Parkour.h"
 #include "MNEMONIC_ProjectCharacter.generated.h"
 
 class UInputComponent;
@@ -85,6 +87,12 @@ public:
 	/** Whether to use motion controller location for aiming. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	uint8 bUsingMotionControllers : 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	FCombat m_pCombat;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Parkour")
+	FParkour m_pParkour;
 
 protected:
 	

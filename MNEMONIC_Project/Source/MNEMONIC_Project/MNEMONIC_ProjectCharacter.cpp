@@ -42,16 +42,16 @@ AMNEMONIC_ProjectCharacter::AMNEMONIC_ProjectCharacter()
 	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
 
 	// Create a gun mesh component
-	FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
+	/*FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
 	FP_Gun->SetOnlyOwnerSee(false);			// otherwise won't be visible in the multiplayer
 	FP_Gun->bCastDynamicShadow = false;
 	FP_Gun->CastShadow = false;
 	// FP_Gun->SetupAttachment(Mesh1P, TEXT("GripPoint"));
-	FP_Gun->SetupAttachment(RootComponent);
+	FP_Gun->SetupAttachment(RootComponent);*/
 
-	FP_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
+	/*FP_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
 	FP_MuzzleLocation->SetupAttachment(FP_Gun);
-	FP_MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));
+	FP_MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));*/
 
 	// Default offset from the character location for projectiles to spawn
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
@@ -68,7 +68,7 @@ AMNEMONIC_ProjectCharacter::AMNEMONIC_ProjectCharacter()
 
 	// Create a gun and attach it to the right-hand VR controller.
 	// Create a gun mesh component
-	VR_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("VR_Gun"));
+	/*VR_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("VR_Gun"));
 	VR_Gun->SetOnlyOwnerSee(false);			// otherwise won't be visible in the multiplayer
 	VR_Gun->bCastDynamicShadow = false;
 	VR_Gun->CastShadow = false;
@@ -78,7 +78,7 @@ AMNEMONIC_ProjectCharacter::AMNEMONIC_ProjectCharacter()
 	VR_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("VR_MuzzleLocation"));
 	VR_MuzzleLocation->SetupAttachment(VR_Gun);
 	VR_MuzzleLocation->SetRelativeLocation(FVector(0.000004, 53.999992, 10.000000));
-	VR_MuzzleLocation->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));		// Counteract the rotation of the VR gun model.
+	VR_MuzzleLocation->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));		// Counteract the rotation of the VR gun model.*/
 
 	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
@@ -90,10 +90,10 @@ void AMNEMONIC_ProjectCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
-	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+	//FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
 	// Show or hide the two versions of the gun based on whether or not we're using motion controllers.
-	if (bUsingMotionControllers)
+	/*if (bUsingMotionControllers)
 	{
 		VR_Gun->SetHiddenInGame(false, true);
 		Mesh1P->SetHiddenInGame(true, true);
@@ -102,6 +102,15 @@ void AMNEMONIC_ProjectCharacter::BeginPlay()
 	{
 		VR_Gun->SetHiddenInGame(true, true);
 		Mesh1P->SetHiddenInGame(false, true);
+	}*/
+
+	m_pCombat.SetCharacter(this);
+	m_pParkour.SetCharacter(this);
+
+	if(m_pCombat.m_Weapon)
+	{
+		m_pCombat.CreateWeapon();
+		m_pCombat.AttachWeapon("WeaponSocket", FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	}
 }
 
@@ -141,6 +150,12 @@ void AMNEMONIC_ProjectCharacter::SetupPlayerInputComponent(class UInputComponent
 void AMNEMONIC_ProjectCharacter::OnFire()
 {
 	// try and fire a projectile
+
+	if(m_pCombat.m_pWeapon != nullptr)
+	{
+		m_pCombat.m_pWeapon->SecondaryAttack();
+	}
+	return;
 	if (ProjectileClass != nullptr)
 	{
 		UWorld* const World = GetWorld();

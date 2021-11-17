@@ -49,9 +49,9 @@ AMNEMONIC_ProjectCharacter::AMNEMONIC_ProjectCharacter()
 	// FP_Gun->SetupAttachment(Mesh1P, TEXT("GripPoint"));
 	FP_Gun->SetupAttachment(RootComponent);*/
 
-	/*FP_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
-	FP_MuzzleLocation->SetupAttachment(FP_Gun);
-	FP_MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));*/
+	FP_ShootOrigin = CreateDefaultSubobject<USceneComponent>(TEXT("ShootOrigin"));
+	FP_ShootOrigin->SetupAttachment(RootComponent);
+	//FP_ShootOrigin->AttachToComponent(Mesh1P, FAttachmentTransformRules::SnapToTargetNotIncludingScale, "WeaponSocket");
 
 	// Default offset from the character location for projectiles to spawn
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
@@ -73,7 +73,7 @@ AMNEMONIC_ProjectCharacter::AMNEMONIC_ProjectCharacter()
 	VR_Gun->bCastDynamicShadow = false;
 	VR_Gun->CastShadow = false;
 	VR_Gun->SetupAttachment(R_MotionController);
-	VR_Gun->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+	VR_Gun->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));*
 
 	VR_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("VR_MuzzleLocation"));
 	VR_MuzzleLocation->SetupAttachment(VR_Gun);
@@ -82,6 +82,10 @@ AMNEMONIC_ProjectCharacter::AMNEMONIC_ProjectCharacter()
 
 	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
+	
+	m_pParkour = CreateDefaultSubobject<UParkourMovementComponent>(TEXT("Parkour Component"));
+	m_pParkour->UpdatedComponent = Mesh1P;
+	m_pParkour->MaxSpeed = 3000.f;
 }
 
 void AMNEMONIC_ProjectCharacter::BeginPlay()
@@ -103,14 +107,15 @@ void AMNEMONIC_ProjectCharacter::BeginPlay()
 		VR_Gun->SetHiddenInGame(true, true);
 		Mesh1P->SetHiddenInGame(false, true);
 	}*/
+	
+	m_pParkour->SetCharacter(this);
+	Combat.SetCharacter(this);
 
-	m_pCombat.SetCharacter(this);
-	m_pParkour.SetCharacter(this);
-
-	if(m_pCombat.m_Weapon)
+	if(Combat.m_Weapon)
 	{
-		m_pCombat.CreateWeapon();
-		m_pCombat.AttachWeapon("WeaponSocket", FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		Combat.CreateWeapon();
+		Combat.AttachWeapon("WeaponSocket", FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		Combat.m_pWeapon->SetFiringOrigin(FP_ShootOrigin);
 	}
 }
 
@@ -151,12 +156,11 @@ void AMNEMONIC_ProjectCharacter::OnFire()
 {
 	// try and fire a projectile
 
-	if(m_pCombat.m_pWeapon != nullptr)
+	if(Combat.m_pWeapon != nullptr)
 	{
-		m_pCombat.m_pWeapon->SecondaryAttack();
+		Combat.m_pWeapon->SecondaryAttack();
 	}
-	return;
-	if (ProjectileClass != nullptr)
+	/*if (ProjectileClass != nullptr)
 	{
 		UWorld* const World = GetWorld();
 		if (World != nullptr)
@@ -198,7 +202,7 @@ void AMNEMONIC_ProjectCharacter::OnFire()
 		{
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
-	}
+	}*/
 }
 
 void AMNEMONIC_ProjectCharacter::OnResetVR()

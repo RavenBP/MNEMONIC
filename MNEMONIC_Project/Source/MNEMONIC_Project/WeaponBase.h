@@ -22,12 +22,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Mesh")
 	UStaticMeshComponent* m_pMesh;
 
+	void SetFiringOrigin(USceneComponent* origin);
+
 	virtual void PrimaryAttack(); // Perhaps close-combat melee attack?
 	virtual void SecondaryAttack(); // Ranged attack?
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	USceneComponent* firingOrigin;
 
 public:	
 	// Called every frame

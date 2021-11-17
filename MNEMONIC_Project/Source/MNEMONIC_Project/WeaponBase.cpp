@@ -17,6 +17,11 @@ AWeaponBase::AWeaponBase()
 
 }
 
+void AWeaponBase::SetFiringOrigin(USceneComponent* origin)
+{
+	firingOrigin = origin;
+}
+
 void AWeaponBase::PrimaryAttack()
 {
 }

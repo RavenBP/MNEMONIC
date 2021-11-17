@@ -3,11 +3,28 @@
 #include "Parkour.h"
 #include "MNEMONIC_ProjectCharacter.h"
 
-FParkour::FParkour()
-{
-}
-
-void FParkour::SetCharacter(AMNEMONIC_ProjectCharacter* character)
+void UParkourMovementComponent::SetCharacter(AMNEMONIC_ProjectCharacter* character)
 {
 	m_pCharacter = character;
+}
+
+void UParkourMovementComponent::TickComponent(float DeltaTime, ELevelTick Tick,
+	FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, Tick, ThisTickFunction);
+}
+
+void UParkourMovementComponent::PostLoad()
+{
+	Super::PostLoad();
+}
+
+void UParkourMovementComponent::InitializeComponent()
+{
+	Super::InitializeComponent();
+}
+
+void UParkourMovementComponent::UpdateTickRegistration()
+{
+	Super::UpdateTickRegistration();
 }

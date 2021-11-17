@@ -13,5 +13,5 @@ void AThrowingWeapon::SecondaryAttack()
 	Super::SecondaryAttack();
 	m_pMesh->SetSimulatePhysics(true);
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, "Throwing weapon!");
-	m_pMesh->AddForce(GetActorForwardVector() * 1000);
+	m_pMesh->AddImpulse(firingOrigin->GetForwardVector() * 500);
 }

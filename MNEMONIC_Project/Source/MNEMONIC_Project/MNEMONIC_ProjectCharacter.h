@@ -29,10 +29,6 @@ class AMNEMONIC_ProjectCharacter : public ACharacter
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	USkeletalMeshComponent* FP_Gun;
 
-	/** Location on gun mesh where projectiles should spawn. */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	USceneComponent* FP_MuzzleLocation;
-
 	/** Gun mesh: VR view (attached to the VR controller directly, no arm, just the actual gun) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	USkeletalMeshComponent* VR_Gun;
@@ -60,6 +56,11 @@ protected:
 	virtual void BeginPlay();
 
 public:
+
+	/** Location on gun mesh where projectiles should spawn. */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Mesh)
+		USceneComponent* FP_ShootOrigin;
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -89,10 +90,10 @@ public:
 	uint8 bUsingMotionControllers : 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	FCombat m_pCombat;
+	FCombat Combat;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Parkour")
-	FParkour m_pParkour;
+	UParkourMovementComponent* m_pParkour;
 
 protected:
 	

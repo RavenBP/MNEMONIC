@@ -24,8 +24,10 @@ public:
 
 	void SetFiringOrigin(USceneComponent* origin);
 
-	virtual void PrimaryAttack(); // Perhaps close-combat melee attack?
-	virtual void SecondaryAttack(); // Ranged attack?
+	virtual void OnPressedPrimaryAttack();
+	virtual void OnReleasedPrimaryAttack();
+	virtual void OnPressedSecondaryAttack();
+	virtual void OnReleasedSecondaryAttack();
 
 protected:
 	// Called when the game starts or when spawned

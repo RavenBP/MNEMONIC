@@ -100,6 +100,11 @@ protected:
 	/** Fires a projectile. */
 	void OnFire();
 
+	void OnPressedPrimary();
+	void OnReleasedPrimary();
+	void OnPressedSecondary();
+	void OnReleasedSecondary();
+
 	/** Resets HMD orientation and position in VR. */
 	void OnResetVR();
 

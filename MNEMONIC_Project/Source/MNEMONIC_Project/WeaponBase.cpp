@@ -22,11 +22,19 @@ void AWeaponBase::SetFiringOrigin(USceneComponent* origin)
 	firingOrigin = origin;
 }
 
-void AWeaponBase::PrimaryAttack()
+void AWeaponBase::OnPressedPrimaryAttack()
 {
 }
 
-void AWeaponBase::SecondaryAttack()
+void AWeaponBase::OnReleasedPrimaryAttack()
+{
+}
+
+void AWeaponBase::OnPressedSecondaryAttack()
+{
+}
+
+void AWeaponBase::OnReleasedSecondaryAttack()
 {
 }
 

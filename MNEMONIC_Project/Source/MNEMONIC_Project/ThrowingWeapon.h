@@ -15,7 +15,20 @@ class MNEMONIC_PROJECT_API AThrowingWeapon : public AWeaponBase
 	GENERATED_BODY()
 
 public:
-	virtual void PrimaryAttack() override;
-	virtual void SecondaryAttack() override;
-	
+	AThrowingWeapon();
+	virtual void OnPressedPrimaryAttack() override;
+	virtual void OnPressedSecondaryAttack() override;
+	virtual void OnReleasedSecondaryAttack() override;
+	virtual void Tick(float DeltaSeconds) override;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Stats)
+		float m_fRetractSpeed = 5;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Stats)
+		float m_fRetractDistance = 2;
+
+private:
+	FName socketAttachedName;
+	USceneComponent* attachedComponent;
+	bool m_bThrowingBack;
 };

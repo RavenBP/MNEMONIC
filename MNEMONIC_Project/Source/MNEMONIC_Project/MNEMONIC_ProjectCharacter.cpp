@@ -115,7 +115,7 @@ void AMNEMONIC_ProjectCharacter::BeginPlay()
 	{
 		Combat.CreateWeapon();
 		Combat.AttachWeapon("WeaponSocket", FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		Combat.m_pWeapon->SetFiringOrigin(FP_ShootOrigin);
+		Combat.m_pWeapon->SetFiringOrigin(GetFirstPersonCameraComponent());
 	}
 }
 
@@ -132,7 +132,8 @@ void AMNEMONIC_ProjectCharacter::SetupPlayerInputComponent(class UInputComponent
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// Bind fire event
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMNEMONIC_ProjectCharacter::OnFire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMNEMONIC_ProjectCharacter::OnPressedSecondary);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AMNEMONIC_ProjectCharacter::OnReleasedSecondary);
 
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
@@ -155,11 +156,6 @@ void AMNEMONIC_ProjectCharacter::SetupPlayerInputComponent(class UInputComponent
 void AMNEMONIC_ProjectCharacter::OnFire()
 {
 	// try and fire a projectile
-
-	if(Combat.m_pWeapon != nullptr)
-	{
-		Combat.m_pWeapon->SecondaryAttack();
-	}
 	/*if (ProjectileClass != nullptr)
 	{
 		UWorld* const World = GetWorld();
@@ -203,6 +199,30 @@ void AMNEMONIC_ProjectCharacter::OnFire()
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
 	}*/
+}
+
+void AMNEMONIC_ProjectCharacter::OnPressedPrimary()
+{
+}
+
+void AMNEMONIC_ProjectCharacter::OnReleasedPrimary()
+{
+}
+
+void AMNEMONIC_ProjectCharacter::OnPressedSecondary()
+{
+	if (Combat.m_pWeapon)
+	{
+		Combat.m_pWeapon->OnPressedSecondaryAttack();
+	}
+}
+
+void AMNEMONIC_ProjectCharacter::OnReleasedSecondary()
+{
+	if (Combat.m_pWeapon)
+	{
+		Combat.m_pWeapon->OnReleasedSecondaryAttack();
+	}
 }
 
 void AMNEMONIC_ProjectCharacter::OnResetVR()

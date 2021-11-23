@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "Combat.h"
 #include "Parkour.h"
+#include <stack>
+#include "IState.h"
 #include "MNEMONIC_ProjectCharacter.generated.h"
 
 class UInputComponent;
@@ -54,6 +56,7 @@ public:
 
 protected:
 	virtual void BeginPlay();
+	virtual void Tick(float DeltaTime);
 
 public:
 
@@ -94,6 +97,13 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Parkour")
 	UParkourMovementComponent* m_pParkour;
+
+	std::stack<UIState*> m_sStateStack;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+	UIState* m_pInitialState;
+
+	UInputComponent* m_PlayerInputComponent;
 
 protected:
 	
@@ -143,7 +153,7 @@ protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 	// End of APawn interface
-
+	void ClearAllPlayerInput();
 	/* 
 	 * Configures input for touchscreen devices if there is a valid touch interface for doing so 
 	 *
@@ -157,6 +167,10 @@ public:
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+	/** Change the current state of the character **/
+	void PushState(UIState* newState);
+	void PopState();
+	void ResetPlayerInputToCurrentState();
 
 };
 

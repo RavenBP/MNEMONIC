@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
+#include "IdleState.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -86,6 +87,7 @@ AMNEMONIC_ProjectCharacter::AMNEMONIC_ProjectCharacter()
 	m_pParkour = CreateDefaultSubobject<UParkourMovementComponent>(TEXT("Parkour Component"));
 	m_pParkour->UpdatedComponent = Mesh1P;
 	m_pParkour->MaxSpeed = 3000.f;
+
 }
 
 void AMNEMONIC_ProjectCharacter::BeginPlay()
@@ -93,6 +95,7 @@ void AMNEMONIC_ProjectCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 
+	PushState(NewObject<UIdleState>());
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	//FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
@@ -119,6 +122,13 @@ void AMNEMONIC_ProjectCharacter::BeginPlay()
 	}
 }
 
+void AMNEMONIC_ProjectCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	m_sStateStack.top()->update(this);
+}
+
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -127,6 +137,7 @@ void AMNEMONIC_ProjectCharacter::SetupPlayerInputComponent(class UInputComponent
 	// set up gameplay key bindings
 	check(PlayerInputComponent);
 
+	m_PlayerInputComponent = PlayerInputComponent;
 	// Bind jump events
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
@@ -141,8 +152,8 @@ void AMNEMONIC_ProjectCharacter::SetupPlayerInputComponent(class UInputComponent
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AMNEMONIC_ProjectCharacter::OnResetVR);
 
 	// Bind movement events
-	PlayerInputComponent->BindAxis("MoveForward", this, &AMNEMONIC_ProjectCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AMNEMONIC_ProjectCharacter::MoveRight);
+	//PlayerInputComponent->BindAxis("MoveForward", this, &AMNEMONIC_ProjectCharacter::MoveForward);
+	//PlayerInputComponent->BindAxis("MoveRight", this, &AMNEMONIC_ProjectCharacter::MoveRight);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -151,6 +162,12 @@ void AMNEMONIC_ProjectCharacter::SetupPlayerInputComponent(class UInputComponent
 	PlayerInputComponent->BindAxis("TurnRate", this, &AMNEMONIC_ProjectCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AMNEMONIC_ProjectCharacter::LookUpAtRate);
+}
+
+void AMNEMONIC_ProjectCharacter::ClearAllPlayerInput()
+{
+	m_PlayerInputComponent->AxisBindings.Empty();
+	m_PlayerInputComponent->ClearActionBindings();
 }
 
 void AMNEMONIC_ProjectCharacter::OnFire()
@@ -337,3 +354,25 @@ bool AMNEMONIC_ProjectCharacter::EnableTouchscreenMovement(class UInputComponent
 	
 	return false;
 }
+
+void AMNEMONIC_ProjectCharacter::PushState(UIState* newState)
+{
+	if(m_sStateStack.size() > 0) m_sStateStack.top()->exit();
+	m_sStateStack.push(newState);
+	ResetPlayerInputToCurrentState();
+}
+
+void AMNEMONIC_ProjectCharacter::PopState()
+{
+	m_sStateStack.top()->exit();
+	m_sStateStack.pop();
+	ResetPlayerInputToCurrentState();
+}
+
+void AMNEMONIC_ProjectCharacter::ResetPlayerInputToCurrentState()
+{
+	ClearAllPlayerInput();
+	SetupPlayerInputComponent(m_PlayerInputComponent);
+	m_sStateStack.top()->enter(this);
+}
+

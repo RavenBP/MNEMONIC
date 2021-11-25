@@ -125,7 +125,7 @@ void AMNEMONIC_ProjectCharacter::BeginPlay()
 void AMNEMONIC_ProjectCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	m_sStateStack.top()->update(this);
+	//m_sStateStack.top()->update(this);
 }
 
 
@@ -152,8 +152,8 @@ void AMNEMONIC_ProjectCharacter::SetupPlayerInputComponent(class UInputComponent
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AMNEMONIC_ProjectCharacter::OnResetVR);
 
 	// Bind movement events
-	//PlayerInputComponent->BindAxis("MoveForward", this, &AMNEMONIC_ProjectCharacter::MoveForward);
-	//PlayerInputComponent->BindAxis("MoveRight", this, &AMNEMONIC_ProjectCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward", this, &AMNEMONIC_ProjectCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AMNEMONIC_ProjectCharacter::MoveRight);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -359,7 +359,7 @@ void AMNEMONIC_ProjectCharacter::PushState(UIState* newState)
 {
 	if(m_sStateStack.size() > 0) m_sStateStack.top()->exit();
 	m_sStateStack.push(newState);
-	ResetPlayerInputToCurrentState();
+	//ResetPlayerInputToCurrentState();
 }
 
 void AMNEMONIC_ProjectCharacter::PopState()

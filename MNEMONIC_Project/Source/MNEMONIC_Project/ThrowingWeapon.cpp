@@ -54,6 +54,7 @@ void AThrowingWeapon::Tick(float DeltaSeconds)
 
 	if(m_bThrowingBack)
 	{
+		if (!attachedComponent) return;
 		const auto socketPos = attachedComponent->GetSocketLocation(socketAttachedName);
 		const auto myPos = m_pMesh->GetComponentLocation();
 		//GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Green, FString::Printf(TEXT("Socket pos: %f, %f, %f - My pos: %f, %f, %f"), socketPos.X, socketPos.Y, socketPos.Z, myPos.X, myPos.Y, myPos.Z));

@@ -46,7 +46,7 @@ void UStateManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 			{
 				for(int i = 0; i < StateStack.Num();i++)
 				{
-					GEngine->AddOnScreenDebugMessage(-1,0.0f, FColor::Purple, this->GetOwner()->GetName() + "'s stack "+ FString::FromInt(i)+ " " + StateStack[i]->GetName());	
+					GEngine->AddOnScreenDebugMessage(-1,0.0f, FColor::Purple, this->GetOwner()->GetName() + "'s stack "+ FString::FromInt(i)+ ": " + StateStack[i]->StateDisplayName.ToString());	
 				}
 			}
 			

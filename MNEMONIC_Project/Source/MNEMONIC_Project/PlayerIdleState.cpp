@@ -18,6 +18,6 @@ void UPlayerIdleState::TickState()
 	//if is not moving on the ground
 	if(!PlayerRef->GetCharacterMovement()->IsMovingOnGround())
 	{
-		PlayerRef->StateManager->SwitchStateByKey("Air");
+		PlayerRef->StateManager->PushStateByKey("Air");
 	}
 }

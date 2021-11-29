@@ -16,6 +16,6 @@ void UPlayerInAirState::TickState()
 	Super::TickState();
 	if(PlayerRef->GetCharacterMovement()->IsMovingOnGround())
 	{
-		PlayerRef->StateManager->SwitchStateByKey("Idle");
+		PlayerRef->StateManager->PopState();
 	}
 }

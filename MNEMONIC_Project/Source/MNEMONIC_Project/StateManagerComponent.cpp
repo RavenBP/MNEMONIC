@@ -38,11 +38,100 @@ void UStateManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		if(CurrentState)
 		{
 			GEngine->AddOnScreenDebugMessage(-1,0.0f, FColor::Green, this->GetOwner()->GetName() + "'s current state: " + CurrentState->StateDisplayName.ToString());
-			if(StateHistory.Num() >0)
+			// if(StateHistory.Num() >0)
+			// {
+			// 	GEngine->AddOnScreenDebugMessage(-1,0.0f, FColor::Purple, this->GetOwner()->GetName() + "'s past state " + StateHistory[StateHistory.Num() - 1]->GetName());
+			// }
+			if(StateStack.Num() > 0)
 			{
-				GEngine->AddOnScreenDebugMessage(-1,0.0f, FColor::Purple, this->GetOwner()->GetName() + "'s past state " + StateHistory[StateHistory.Num() - 1]->GetName());
+				for(int i = 0; i < StateStack.Num();i++)
+				{
+					GEngine->AddOnScreenDebugMessage(-1,0.0f, FColor::Purple, this->GetOwner()->GetName() + "'s stack "+ FString::FromInt(i)+ " " + StateStack[i]->GetName());	
+				}
+			}
+			
+		}
+	}
+}
+
+void UStateManagerComponent::PushStateByKey(FString StateKey)
+{
+	UIState* NewState = StateMap.FindRef(StateKey);
+
+	PushState(NewState);
+}
+
+void UStateManagerComponent::PushState(UIState* NewState)
+{
+	if(NewState->IsValidLowLevel())
+	{
+		//If there is no current state, it means we are at init
+		if(!CurrentState)
+		{
+			CurrentState = NewState;
+			StateStack.Push(CurrentState);
+		}
+		else
+		{
+			if(CurrentState->GetClass() == NewState->GetClass() && CurrentState->bCanRepeat == false)
+			{
+				if(bDebug)
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, this->GetOwner()->GetName() + " state push failed" + "class can't be repeated");
+				}
+			}
+			else
+			{
+				bCanTickState = false;
+				CurrentState->OnExitState();
+
+				//state history stuff
+				if(StateHistory.Num() < StateHistoryLength)
+				{
+					StateHistory.Push(CurrentState);
+				}
+				else
+				{
+					StateHistory.RemoveAt(0);
+					StateHistory.Push(CurrentState);
+				}
+				
+				CurrentState = NewState;
+				StateStack.Push(CurrentState);
 			}
 		}
+
+		if(CurrentState)
+		{
+			CurrentState->OnEnterState(GetOwner());
+			bCanTickState = true;
+		}
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, this->GetOwner()->GetName() + "'s state push failed. " + "Invalid state!");
+	}
+}
+
+void UStateManagerComponent::PopState()
+{
+	//if there is more than 1 state
+	if(StateStack.Num() > 1)
+	{
+		bCanTickState = false;
+		CurrentState->OnExitState();
+
+		StateStack.Pop();
+		CurrentState = StateStack.Last();
+		if(CurrentState)
+		{
+			CurrentState->OnEnterState(GetOwner());
+			bCanTickState = true;
+		}
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, this->GetOwner()->GetName() + "'s state pop failed. " + "only 1 state left");
 	}
 }
 
@@ -105,7 +194,7 @@ void UStateManagerComponent::SwitchState(UIState* NewState)
 
 void UStateManagerComponent::InitStateManager()
 {
-	SwitchStateByKey(InitialState);
+	PushStateByKey(InitialState);
 }
 
 void UStateManagerComponent::InitializeStates()

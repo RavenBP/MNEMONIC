@@ -35,6 +35,9 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	TArray<UIState*> StateHistory;
 
+	UPROPERTY(BlueprintReadOnly)
+	TArray<UIState*> StateStack;
+
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "State Machine Debug", meta = (ClampMin = "0", ClampMax = "10", UIMin = "0", UIMax = "10"))
 	int32 StateHistoryLength;
 	UPROPERTY(BlueprintReadOnly)
@@ -43,6 +46,13 @@ public:
 	UPROPERTY()
 	TMap<FString, UIState*> StateMap;
 
+	UFUNCTION(BlueprintCallable, Category = "State Machine")
+	void PushStateByKey(FString StateKey);
+	UFUNCTION(BlueprintCallable, Category = "State Machine")
+	void PushState(UIState* NewState);
+	UFUNCTION(BlueprintCallable, Category = "State Machine")
+	void PopState();
+	
 	UFUNCTION(BlueprintCallable, Category = "State Machine")
 	void SwitchStateByKey(FString StateKey);
 	UFUNCTION(BlueprintCallable, Category = "State Machine")

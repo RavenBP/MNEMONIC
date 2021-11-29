@@ -11,7 +11,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
-#include "IdleState.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -20,6 +19,7 @@ DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
 AMNEMONIC_ProjectCharacter::AMNEMONIC_ProjectCharacter()
 {
+	StateManager = CreateDefaultSubobject<UStateManagerComponent>(TEXT("State Manager"));
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 
@@ -94,8 +94,7 @@ void AMNEMONIC_ProjectCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
-
-	PushState(NewObject<UIdleState>());
+	
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	//FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
@@ -120,6 +119,8 @@ void AMNEMONIC_ProjectCharacter::BeginPlay()
 		Combat.AttachWeapon("WeaponSocket", FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 		Combat.m_pWeapon->SetFiringOrigin(GetFirstPersonCameraComponent());
 	}
+
+	StateManager->InitStateManager();
 }
 
 void AMNEMONIC_ProjectCharacter::Tick(float DeltaTime)
@@ -136,11 +137,10 @@ void AMNEMONIC_ProjectCharacter::SetupPlayerInputComponent(class UInputComponent
 {
 	// set up gameplay key bindings
 	check(PlayerInputComponent);
-
-	m_PlayerInputComponent = PlayerInputComponent;
+	
 	// Bind jump events
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	//PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	//PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMNEMONIC_ProjectCharacter::OnPressedSecondary);
@@ -164,11 +164,6 @@ void AMNEMONIC_ProjectCharacter::SetupPlayerInputComponent(class UInputComponent
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AMNEMONIC_ProjectCharacter::LookUpAtRate);
 }
 
-void AMNEMONIC_ProjectCharacter::ClearAllPlayerInput()
-{
-	m_PlayerInputComponent->AxisBindings.Empty();
-	m_PlayerInputComponent->ClearActionBindings();
-}
 
 void AMNEMONIC_ProjectCharacter::OnFire()
 {
@@ -355,24 +350,4 @@ bool AMNEMONIC_ProjectCharacter::EnableTouchscreenMovement(class UInputComponent
 	return false;
 }
 
-void AMNEMONIC_ProjectCharacter::PushState(UIState* newState)
-{
-	if(m_sStateStack.size() > 0) m_sStateStack.top()->exit();
-	m_sStateStack.push(newState);
-	//ResetPlayerInputToCurrentState();
-}
-
-void AMNEMONIC_ProjectCharacter::PopState()
-{
-	m_sStateStack.top()->exit();
-	m_sStateStack.pop();
-	ResetPlayerInputToCurrentState();
-}
-
-void AMNEMONIC_ProjectCharacter::ResetPlayerInputToCurrentState()
-{
-	ClearAllPlayerInput();
-	SetupPlayerInputComponent(m_PlayerInputComponent);
-	m_sStateStack.top()->enter(this);
-}
 

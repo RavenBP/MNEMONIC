@@ -10,21 +10,28 @@ class AMNEMONIC_ProjectCharacter;
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class MNEMONIC_PROJECT_API UIState : public UObject
 {
 public:
 
 	GENERATED_BODY()
 
-		UIState() {}
-	virtual ~UIState() {}
-	virtual void enter(AMNEMONIC_ProjectCharacter* character) {}
-	virtual void update(AMNEMONIC_ProjectCharacter* character) {}
-	virtual void exit();
+public:
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	bool bCanTickState = false;
 
+	UPROPERTY(BlueprintReadOnly,EditDefaultsOnly)
+	bool bCanRepeat = false;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	FName StateDisplayName;
+		
+
+public:
+	virtual void OnEnterState(AActor* StateOwner);
+	virtual void TickState();
+	virtual void OnExitState();
 protected:
-	AMNEMONIC_ProjectCharacter* _character;
-	std::vector<FInputAxisBinding> _listOfInputs;
 
 };

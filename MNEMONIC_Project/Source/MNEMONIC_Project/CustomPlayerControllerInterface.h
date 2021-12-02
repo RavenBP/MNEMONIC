@@ -8,6 +8,9 @@
 
 // This class does not need to be modified.
 DECLARE_MULTICAST_DELEGATE(FJumpSignature);
+DECLARE_MULTICAST_DELEGATE_OneParam(FSecondaryWeaponSignature, bool);
+DECLARE_MULTICAST_DELEGATE_OneParam(FMoveForwardSignature, float);
+DECLARE_MULTICAST_DELEGATE_OneParam(FMoveRightSignature, float);
 
 UINTERFACE(MinimalAPI)
 class UCustomPlayerControllerInterface : public UInterface
@@ -26,4 +29,7 @@ class MNEMONIC_PROJECT_API ICustomPlayerControllerInterface
 public:
 
 	virtual FJumpSignature* GetJumpDelegate() = 0;
+	virtual FSecondaryWeaponSignature* GetSecondaryWeaponDelegate() = 0;
+	virtual FMoveForwardSignature* GetMoveForwardDelegate() = 0;
+	virtual FMoveRightSignature* GetMoveRightDelegate() = 0;
 };

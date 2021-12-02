@@ -19,8 +19,18 @@ public:
 protected:
 	virtual void SetupInputComponent() override;
 	void PressJump();
+	void PressFire();
+	void ReleaseFire();
+	void PressMoveForward(float value);
+	void PressMoveRight(float value);
 	virtual FJumpSignature* GetJumpDelegate() override;
+	virtual FSecondaryWeaponSignature* GetSecondaryWeaponDelegate() override;
+	virtual FMoveForwardSignature* GetMoveForwardDelegate() override;
+	virtual FMoveRightSignature* GetMoveRightDelegate() override;
 private:
 	FJumpSignature JumpDelegate;
+	FSecondaryWeaponSignature SecondaryWeaponDelegate;
+	FMoveForwardSignature MoveForwardDelegate;
+	FMoveRightSignature MoveRightDelegate;
 };
 

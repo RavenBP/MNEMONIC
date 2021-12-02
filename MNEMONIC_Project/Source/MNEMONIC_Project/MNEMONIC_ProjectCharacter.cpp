@@ -143,17 +143,17 @@ void AMNEMONIC_ProjectCharacter::SetupPlayerInputComponent(class UInputComponent
 	//PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// Bind fire event
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMNEMONIC_ProjectCharacter::OnPressedSecondary);
-	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AMNEMONIC_ProjectCharacter::OnReleasedSecondary);
+	//PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMNEMONIC_ProjectCharacter::OnPressedSecondary);
+	//PlayerInputComponent->BindAction("Fire", IE_Released, this, &AMNEMONIC_ProjectCharacter::OnReleasedSecondary);
 
 	// Enable touchscreen input
-	EnableTouchscreenMovement(PlayerInputComponent);
+	//EnableTouchscreenMovement(PlayerInputComponent);
 
-	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AMNEMONIC_ProjectCharacter::OnResetVR);
+	//PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AMNEMONIC_ProjectCharacter::OnResetVR);
 
 	// Bind movement events
-	PlayerInputComponent->BindAxis("MoveForward", this, &AMNEMONIC_ProjectCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AMNEMONIC_ProjectCharacter::MoveRight);
+	//PlayerInputComponent->BindAxis("MoveForward", this, &AMNEMONIC_ProjectCharacter::MoveForward);
+	//PlayerInputComponent->BindAxis("MoveRight", this, &AMNEMONIC_ProjectCharacter::MoveRight);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.

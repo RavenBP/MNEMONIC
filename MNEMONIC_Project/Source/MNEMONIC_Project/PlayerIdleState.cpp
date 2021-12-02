@@ -21,3 +21,22 @@ void UPlayerIdleState::TickState()
 		PlayerRef->StateManager->PushStateByKey("Air");
 	}
 }
+
+void UPlayerIdleState::PressMoveForward(float Value)
+{
+	Super::PressMoveForward(Value);
+	if(Value != 0.0f)
+	{
+		PlayerRef->StateManager->PushStateByKey("Running");
+	}
+}
+
+void UPlayerIdleState::PressMoveRight(float Value)
+{
+	Super::PressMoveRight(Value);
+	if(Value != 0.0f)
+	{
+		PlayerRef->StateManager->PushStateByKey("Running");
+	}
+	
+}

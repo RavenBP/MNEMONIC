@@ -3,6 +3,7 @@
 
 #include "PlayerBaseState.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 void UPlayerBaseState::OnEnterState(AActor* StateOwner)
 {
@@ -56,7 +57,10 @@ void UPlayerBaseState::PressMoveForward(float value)
 {
 	if(value != 0.0f)
 	{
-		PlayerRef->AddMovementInput(PlayerRef->GetActorForwardVector(),value);
+		//just another way of getting the forward vector
+		FRotator rotator = FRotator(0.0f, PlayerRef->GetControlRotation().Yaw, 0.0f);
+		FVector forwardVector = UKismetMathLibrary::GetForwardVector(rotator);
+		PlayerRef->AddMovementInput(forwardVector,value);
 	}
 }
 

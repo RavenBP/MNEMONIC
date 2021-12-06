@@ -214,29 +214,6 @@ void AMNEMONIC_ProjectCharacter::OnFire()
 	}*/
 }
 
-void AMNEMONIC_ProjectCharacter::OnPressedPrimary()
-{
-}
-
-void AMNEMONIC_ProjectCharacter::OnReleasedPrimary()
-{
-}
-
-void AMNEMONIC_ProjectCharacter::OnPressedSecondary()
-{
-	if (Combat.m_pWeapon)
-	{
-		Combat.m_pWeapon->OnPressedSecondaryAttack();
-	}
-}
-
-void AMNEMONIC_ProjectCharacter::OnReleasedSecondary()
-{
-	if (Combat.m_pWeapon)
-	{
-		Combat.m_pWeapon->OnReleasedSecondaryAttack();
-	}
-}
 
 void AMNEMONIC_ProjectCharacter::OnResetVR()
 {

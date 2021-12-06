@@ -5,6 +5,7 @@
 
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
 
 void UPlayerSlidingState::OnEnterState(AActor* StateOwner)
@@ -30,6 +31,11 @@ void UPlayerSlidingState::TickState()
 {
 	Super::TickState();
 	PlayerRef->GetMovementComponent()->Velocity = vInitialVelocity;
+	//if for some reason we are in the air after sliding we want to cancel the sliding
+	if(fTimer > 0.2f && !PlayerRef->GetCharacterMovement()->IsMovingOnGround())
+	{
+		PlayerRef->StateManager->PopState();
+	}
 	if(fTimer > fSlidingTime)
 	{
 		PlayerRef->StateManager->PopState();

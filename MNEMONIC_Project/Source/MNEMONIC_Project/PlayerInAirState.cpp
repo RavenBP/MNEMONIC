@@ -19,3 +19,8 @@ void UPlayerInAirState::TickState()
 		PlayerRef->StateManager->PopState();
 	}
 }
+
+void UPlayerInAirState::PressMoveRight(float Value)
+{
+	//if(Value != 0) PlayerRef->GetMovementComponent()->Velocity += PlayerRef->GetActorRightVector() * Value*20.0f;
+}

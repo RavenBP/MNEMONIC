@@ -22,6 +22,7 @@ void UPlayerBaseState::OnEnterState(AActor* StateOwner)
 	if(PlayerController)
 	{
 		PlayerController->GetJumpDelegate()->AddUObject(this, &UPlayerBaseState::PressJump);
+		PlayerController->GetSlideDelegate()->AddUObject(this, &UPlayerBaseState::PressSlide);
 		PlayerController->GetSecondaryWeaponDelegate()->AddUObject(this, &UPlayerBaseState::PressSecondaryWeapon);
 		PlayerController->GetMoveForwardDelegate()->AddUObject(this, &UPlayerBaseState::PressMoveForward);
 		PlayerController->GetMoveRightDelegate()->AddUObject(this, &UPlayerBaseState::PressMoveRight);
@@ -35,6 +36,7 @@ void UPlayerBaseState::OnExitState()
 	if(PlayerController)
 	{
 		PlayerController->GetJumpDelegate()->RemoveAll(this);
+		PlayerController->GetSlideDelegate()->RemoveAll(this);
 		PlayerController->GetMoveForwardDelegate()->RemoveAll(this);
 		PlayerController->GetMoveRightDelegate()->RemoveAll(this);
 		PlayerController->GetSecondaryWeaponDelegate()->RemoveAll(this);
@@ -43,6 +45,11 @@ void UPlayerBaseState::OnExitState()
 
 void UPlayerBaseState::PressJump()
 {
+}
+
+void UPlayerBaseState::PressSlide()
+{
+	
 }
 
 void UPlayerBaseState::PressMoveForward(float value)

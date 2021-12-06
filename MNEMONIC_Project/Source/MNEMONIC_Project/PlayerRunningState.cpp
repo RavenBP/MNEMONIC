@@ -12,6 +12,13 @@ void UPlayerRunningState::PressJump()
 	PlayerRef->Jump();
 }
 
+void UPlayerRunningState::PressSlide()
+{
+	Super::PressSlide();
+
+	PlayerRef->StateManager->PushStateByKey("Slide");
+}
+
 void UPlayerRunningState::TickState()
 {
 	Super::TickState();

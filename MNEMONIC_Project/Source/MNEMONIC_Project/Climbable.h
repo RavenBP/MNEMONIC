@@ -30,6 +30,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWRite, Category = "Climb settings")
 		bool m_bCanClimbVertical;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWRite, Category = "Climb settings")
+		float m_fHorizontalClimbDistance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWRite, Category = "Climb settings")
+		float m_fVerticalClimbDistance;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -37,5 +43,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UStaticMeshComponent* GetMesh();
 
 };

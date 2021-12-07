@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Climbable.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 AClimbable::AClimbable()
@@ -14,7 +14,14 @@ AClimbable::AClimbable()
 
 	m_pMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	m_pMesh->SetupAttachment(emptyRoot);
+	m_pMesh->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel3);
 
+	m_bCanClimbHorizontal = true;
+	m_bCanClimbVertical = true;
+	m_bCanClimbLedge = true;
+
+	m_fHorizontalClimbDistance = 0;
+	m_fVerticalClimbDistance = 0;
 }
 
 // Called when the game starts or when spawned
@@ -28,6 +35,5 @@ void AClimbable::BeginPlay()
 void AClimbable::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 

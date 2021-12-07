@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/MovementComponent.h"
+#include "Climbable.h"
 
 /**
  * 
@@ -39,6 +40,9 @@ public:
 		float m_fHorizontalDistance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float m_fTimeBetweenClimb;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float MaxSpeed;
 
 	//Begin UActorComponent Interface
@@ -54,4 +58,19 @@ public:
 
 private:
 	AMNEMONIC_ProjectCharacter* m_pCharacter;
+
+	AClimbable* m_pClimbable;
+	FVector startPos;
+	FVector climbDir;
+	float m_fDistance;
+	float m_fTimeForEnabledClimb;
+
+	enum PARKOUR_TYPE
+	{
+		HORIZONTAL,
+		VERTICAL,
+		LEDGE
+	};
+
+	PARKOUR_TYPE type;
 };

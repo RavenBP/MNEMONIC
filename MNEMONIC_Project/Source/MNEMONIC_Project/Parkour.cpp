@@ -2,14 +2,17 @@
 
 #include "Parkour.h"
 
-#include "Climbable.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "MNEMONIC_ProjectCharacter.h"
 #include "Camera/CameraComponent.h"
+#include "DrawDebugHelpers.h"
 
 void UParkourMovementComponent::SetCharacter(AMNEMONIC_ProjectCharacter* character)
 {
 	m_pCharacter = character;
+
+	m_fTimeBetweenClimb = 0.2f;
+	m_fTimeForEnabledClimb = 0;
 }
 
 void UParkourMovementComponent::TickComponent(float DeltaTime, ELevelTick Tick,
@@ -17,116 +20,114 @@ void UParkourMovementComponent::TickComponent(float DeltaTime, ELevelTick Tick,
 {
 	Super::TickComponent(DeltaTime, Tick, ThisTickFunction);
 
-	// Start wall check for Parkour using UpdatedComponent (Mesh of Character)
-
-	auto camera = m_pCharacter->GetFirstPersonCameraComponent();
-
-	FVector startPos = camera->GetComponentLocation();
-	FVector forward = camera->GetForwardVector();
-	FVector right = camera->GetRightVector();
-
-	TArray<AActor*> actorsToIgnore;
-	actorsToIgnore.Add(UpdatedComponent->GetAttachmentRootActor());
-	TArray<AActor*> outActors;
-	FHitResult hitResult;
-
-	TArray<TEnumAsByte<EObjectTypeQuery>> traceObjectTypes;
-	traceObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Camera));
-
-	UClass* seekClass = AClimbable::StaticClass();
-
-	// Sphere overlap method
-	if(UKismetSystemLibrary::SphereOverlapActors(GetWorld(), startPos, m_fDistanceToWall,
-		traceObjectTypes, seekClass, actorsToIgnore, outActors))
+	if(m_pClimbable)
 	{
-		const auto climbable = Cast<AClimbable>(outActors[0]); // Closest climbable to sphere cast.
-		if (climbable)
-		{
-			const FVector colPoint = climbable->GetComponentsBoundingBox().GetClosestPointTo(UpdatedComponent->GetComponentLocation()); // Collision point.
-			FVector dir = colPoint - UpdatedComponent->GetComponentLocation();
-			dir.Normalize(); // Direction to collision point from body.
+		// Has climbable surfac
 
-			const FVector localCharDir = UpdatedComponent->GetComponentTransform().InverseTransformVector(dir); // Inverse direction (local direction)
-			auto bounds = climbable->GetComponentsBoundingBox();
-			auto charBounds = m_pCharacter->GetComponentsBoundingBox();
-			
-			if(abs(localCharDir.Y) > abs(localCharDir.X))
+		if(type == HORIZONTAL)
+		{
+			GEngine->AddOnScreenDebugMessage(5, 0.1f, FColor::Green, TEXT("Horizontally climbing."));
+			m_pCharacter->SetActorLocation(m_pCharacter->GetActorLocation() + climbDir * m_fHorizontalSpeed * DeltaTime);
+		}
+		else if(type == VERTICAL)
+		{
+			GEngine->AddOnScreenDebugMessage(5, 0.1f, FColor::Green, TEXT("Vertically climbing."));
+			m_pCharacter->SetActorLocation(m_pCharacter->GetActorLocation() + climbDir * m_fVerticalSpeed * DeltaTime);
+		}
+		else if(type == LEDGE)
+		{
+			return;
+		}
+		
+		const TArray<AActor*> actorsToIgnore = { UpdatedComponent->GetAttachmentRootActor() };
+		TArray<AActor*> outActors;
+		const TArray<TEnumAsByte<EObjectTypeQuery>> traceObjects = { UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel3) };
+		FHitResult hitResult;
+
+		if(!UKismetSystemLibrary::SphereTraceSingleForObjects(GetWorld(), m_pCharacter->GetActorLocation(), m_pCharacter->GetActorLocation(), 
+			m_fDistanceToWall, traceObjects, false, actorsToIgnore, EDrawDebugTrace::ForOneFrame, hitResult, true))
+		{
+			GEngine->AddOnScreenDebugMessage(6, 0.1f, FColor::Green, TEXT("Out of climb distance 1."));
+			m_pClimbable = nullptr;
+			m_fTimeForEnabledClimb = FTimespan::FromSeconds(GetWorld()->GetTimeSeconds()).GetTotalMilliseconds() + m_fTimeBetweenClimb;
+		}
+
+		if(FVector::DistSquared(startPos, m_pCharacter->GetActorLocation()) > m_fDistance * m_fDistance)
+		{
+			GEngine->AddOnScreenDebugMessage(6, 0.1f, FColor::Green, TEXT("Out of climb distance 2."));
+			m_pClimbable = nullptr;
+			m_fTimeForEnabledClimb = FTimespan::FromSeconds(GetWorld()->GetTimeSeconds()).GetTotalMilliseconds() + m_fTimeBetweenClimb;
+		}
+	}
+	else if(FTimespan::FromSeconds(GetWorld()->GetTimeSeconds()).GetTotalMilliseconds() >= m_fTimeForEnabledClimb)
+	{
+		// Does not have climbable surface, find one depending on state.
+
+		const auto camera = m_pCharacter->GetFirstPersonCameraComponent();
+
+		startPos = camera->GetComponentLocation();
+
+		const TArray<AActor*> actorsToIgnore = { UpdatedComponent->GetAttachmentRootActor() };
+		TArray<AActor*> outActors;
+
+		FHitResult hitResult;
+		const FVector forward = m_pCharacter->GetActorForwardVector();
+		const FVector right = m_pCharacter->GetActorRightVector();
+
+		const TArray<TEnumAsByte<EObjectTypeQuery>> traceObjects = { UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel3) };
+
+		if(UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), startPos, startPos + forward * m_fDistanceToWall, traceObjects,
+			false, actorsToIgnore, EDrawDebugTrace::ForOneFrame, hitResult, true))
+		{
+			// Hit forward
+			AClimbable* climbable = Cast<AClimbable>(hitResult.Actor);
+
+			if (climbable)
 			{
-				if (localCharDir.Y < 0)
-				{
-					GEngine->AddOnScreenDebugMessage(0, 0.1f, FColor::Green, FString::Printf(TEXT("Found climbable on left: %s"), *climbable->GetFName().ToString()));
-				}
-				else if (localCharDir.Y > 0)
-				{
-					GEngine->AddOnScreenDebugMessage(0, 0.1f, FColor::Green, FString::Printf(TEXT("Found climbable on right: %s"), *climbable->GetFName().ToString()));
-				}
-			}
-			else if(localCharDir.X > 0)
-			{
+				if (!climbable->m_bCanClimbVertical) return;
 				GEngine->AddOnScreenDebugMessage(0, 0.1f, FColor::Green, FString::Printf(TEXT("Found climbable in front: %s"), *climbable->GetFName().ToString()));
+				type = VERTICAL;
+				//m_fDistance = m_pClimbable->m_fVerticalClimbDistance > m_fVerticalDistance ? m_pClimbable->m_fVerticalClimbDistance : m_fVerticalDistance;
+				m_pClimbable = climbable;
+			}
+		}
+		else if (UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), startPos, startPos + right * m_fDistanceToWall, traceObjects,
+			false, actorsToIgnore, EDrawDebugTrace::ForOneFrame, hitResult, true))
+		{
+			// Hit right
 
-				if (colPoint.Z > bounds.Max.Z - 135) // Only while facing front, we can climb it.
-				{
-					GEngine->AddOnScreenDebugMessage(1, 0.1f, FColor::Green, TEXT("Climbing on top of object."));
-					m_pCharacter->SetActorLocation((m_pCharacter->GetActorLocation() + m_pCharacter->GetActorForwardVector() * 10) + FVector::UpVector * charBounds.GetSize().Z);
-					m_pCharacter->GetMesh1P()->ResetAllBodiesSimulatePhysics();
-				}
-			}
-			else if (localCharDir.X < 0)
-			{
-				GEngine->AddOnScreenDebugMessage(0, 0.1f, FColor::Green, FString::Printf(TEXT("Found climbable behind: %s"), *climbable->GetFName().ToString()));
-			}
+			AClimbable* climbable = Cast<AClimbable/**/>(hitResult.Actor);
 
-			GEngine->AddOnScreenDebugMessage(2, 0.1f, FColor::Green, FString::Printf(TEXT("Sphere overlap found: %s - Relative dir: %f, %f, %f - Col point %f, %f, %f - Bounds %f, %f, %f - Size on Z: %f"), *climbable->GetFName().ToString(), localCharDir.X, localCharDir.Y, localCharDir.Z, colPoint.X, colPoint.Y, colPoint.Z, bounds.Max.X, bounds.Max.Y, bounds.Max.Z, charBounds.GetSize().Z ));
-		}
-	}
-	
-	/*if (UKismetSystemLibrary::SphereTraceSingle(m_pCharacter->GetWorld(), startPos, startPos + forward * m_fDistanceToWall, 20.0f,
-		UEngineTypes::ConvertToTraceType(ECC_Camera), true, actorsToIgnore, EDrawDebugTrace::ForOneFrame, hitResult, true, FLinearColor::Red, FLinearColor::Green, 0.2f))
-	{
-		auto climbable = Cast<AClimbable>(hitResult.Actor);
-		if (climbable)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Green, FString::Printf(TEXT("Sphere forward trace found: %s"), *hitResult.Actor->GetFName().ToString()));
-		}
-	}*/
-	
-	
-	/*if (UKismetSystemLibrary::LineTraceSingle(m_pCharacter->GetWorld(), startPos, startPos + forward * m_fDistanceToWall,
-		UEngineTypes::ConvertToTraceType(ECC_Camera), true, actorsToIgnore, EDrawDebugTrace::ForOneFrame, hitResult, true, FLinearColor::Red, FLinearColor::Green, 0.2f))
-	{
-		auto climbable = Cast<AClimbable>(hitResult.Actor);
-		if(climbable)
-		{
-			auto bounds = climbable->GetComponentsBoundingBox();
-			auto charBounds = m_pCharacter->GetComponentsBoundingBox();
-			if (hitResult.ImpactPoint.Z > bounds.Max.Z - 50.0f)
+			if (climbable)
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Green, TEXT("Climbing on top of object."));
-				m_pCharacter->SetActorLocation(FVector(startPos.X, startPos.Y, bounds.Max.Z + charBounds.GetSize().Z * 0.5f) + m_pCharacter->GetActorForwardVector() * 2);
-				m_pCharacter->GetMesh1P()->ResetAllBodiesSimulatePhysics();
+				if (!climbable->m_bCanClimbHorizontal) return;
+				const FVector cross = FVector::CrossProduct(-hitResult.Normal, climbable->GetActorUpVector());
+				m_pClimbable = climbable;
+				climbDir = cross;
+				type = HORIZONTAL;
+				m_fDistance = m_pClimbable->m_fHorizontalClimbDistance > m_fHorizontalDistance ? m_pClimbable->m_fHorizontalClimbDistance : m_fHorizontalDistance;
+				GEngine->AddOnScreenDebugMessage(0, 0.1f, FColor::Green, FString::Printf(TEXT("Found climbable in right: %s"), *climbable->GetFName().ToString()));
 			}
-			GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Green, FString::Printf(TEXT("Found climbable on forward: %s"), *hitResult.Actor->GetFName().ToString()));
+		}
+		else if (UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), startPos, startPos - right * m_fDistanceToWall, traceObjects,
+			false, actorsToIgnore, EDrawDebugTrace::ForOneFrame, hitResult, true))
+		{
+			// Hit left
+
+			AClimbable* climbable = Cast<AClimbable>(hitResult.Actor);
+
+			if (climbable)
+			{
+				if (!climbable->m_bCanClimbHorizontal) return;
+				const FVector cross = FVector::CrossProduct(-hitResult.Normal, climbable->GetActorUpVector());
+				m_pClimbable = climbable;
+				climbDir = -cross;
+				type = HORIZONTAL;
+				m_fDistance = m_pClimbable->m_fHorizontalClimbDistance > m_fHorizontalDistance ? m_pClimbable->m_fHorizontalClimbDistance : m_fHorizontalDistance;
+				GEngine->AddOnScreenDebugMessage(0, 0.1f, FColor::Green, FString::Printf(TEXT("Found climbable in left: %s"), *climbable->GetFName().ToString()));
+			}
 		}
 	}
-	else if (UKismetSystemLibrary::LineTraceSingle(m_pCharacter->GetWorld(), startPos, startPos + right * m_fDistanceToWall,
-		UEngineTypes::ConvertToTraceType(ECC_Camera), true, actorsToIgnore, EDrawDebugTrace::ForOneFrame, hitResult, true, FLinearColor::Red, FLinearColor::Green, 0.2f))
-	{
-		auto climbable = Cast<AClimbable>(hitResult.Actor);
-		if (climbable)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Green, FString::Printf(TEXT("Found climbable on right: %s"), *hitResult.Actor->GetFName().ToString()));
-		}
-	}
-	else if (UKismetSystemLibrary::LineTraceSingle(m_pCharacter->GetWorld(), startPos, startPos - right * m_fDistanceToWall,
-		UEngineTypes::ConvertToTraceType(ECC_Camera), true, actorsToIgnore, EDrawDebugTrace::ForOneFrame, hitResult, true, FLinearColor::Red, FLinearColor::Green, 0.2f))
-	{
-		auto climbable = Cast<AClimbable>(hitResult.Actor);
-		if (climbable)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Green, FString::Printf(TEXT("Found climbable on left: %s"), *hitResult.Actor->GetFName().ToString()));
-		}
-	}*/
 }
 
 void UParkourMovementComponent::PostLoad()

@@ -17,6 +17,5 @@ class MNEMONIC_PROJECT_API UPlayerInAirState : public UPlayerBaseState
 protected:
 	virtual void PressJump() override;
 	virtual void TickState() override;
-	virtual void PressMoveRight(float value) override;
 	
 };

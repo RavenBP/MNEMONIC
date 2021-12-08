@@ -127,7 +127,6 @@ void AMNEMONIC_ProjectCharacter::BeginPlay()
 void AMNEMONIC_ProjectCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//m_sStateStack.top()->update(this);
 }
 
 

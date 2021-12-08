@@ -8,7 +8,18 @@
 void UPlayerInAirState::PressJump()
 {
 	Super::PressJump();
-	GEngine->AddOnScreenDebugMessage(-1, 4.0f, FColor::Purple, "I am in the air");
+	if(PlayerRef->m_pParkour->GetParkourType() == PARKOUR_TYPE::HLEFT)
+	{
+		PlayerRef->StateManager->PushStateByKey("HLeft");
+	}
+	else if(PlayerRef->m_pParkour->GetParkourType() == PARKOUR_TYPE::HRIGHT)
+	{
+		PlayerRef->StateManager->PushStateByKey("HRight");
+	}
+	else if(PlayerRef->m_pParkour->GetParkourType() == PARKOUR_TYPE::VERTICAL)
+	{
+		PlayerRef->StateManager->PushStateByKey("Vertical");
+	}
 }
 
 void UPlayerInAirState::TickState()
@@ -18,9 +29,6 @@ void UPlayerInAirState::TickState()
 	{
 		PlayerRef->StateManager->PopState();
 	}
+	PlayerRef->m_pParkour->Update();
 }
 
-void UPlayerInAirState::PressMoveRight(float Value)
-{
-	
-}

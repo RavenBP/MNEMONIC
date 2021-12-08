@@ -11,6 +11,15 @@
  */
 #include "Parkour.generated.h"
 
+enum class PARKOUR_TYPE
+{
+	NONE,
+	HLEFT,
+	HRIGHT,
+	VERTICAL,
+	LEDGE
+};
+
 class AMNEMONIC_ProjectCharacter;
 
 /**
@@ -49,12 +58,16 @@ public:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	virtual void PostLoad() override;
 	//End UActorComponent Interface
-
+	
 	//Begin UMovementComponent Interface
 	virtual float GetMaxSpeed() const override { return MaxSpeed; }
 	virtual void InitializeComponent() override;
 	virtual void UpdateTickRegistration() override;
 	//End UMovementComponent Interface
+
+	//Custom Function
+	void Update();
+	PARKOUR_TYPE GetParkourType();
 
 private:
 	AMNEMONIC_ProjectCharacter* m_pCharacter;
@@ -65,12 +78,7 @@ private:
 	float m_fDistance;
 	float m_fTimeForEnabledClimb;
 
-	enum PARKOUR_TYPE
-	{
-		HORIZONTAL,
-		VERTICAL,
-		LEDGE
-	};
+	
 
 	PARKOUR_TYPE type;
 };

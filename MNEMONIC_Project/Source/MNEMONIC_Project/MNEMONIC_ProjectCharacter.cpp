@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
+#include "GameFramework/CharacterMovementComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -164,6 +165,10 @@ void AMNEMONIC_ProjectCharacter::SetupPlayerInputComponent(class UInputComponent
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AMNEMONIC_ProjectCharacter::LookUpAtRate);
 }
 
+void AMNEMONIC_ProjectCharacter::SetCharacterEnabledGravity(bool enabled)
+{
+	GetCharacterMovement()->GravityScale = enabled ? 1 : 0;
+}
 
 void AMNEMONIC_ProjectCharacter::OnFire()
 {

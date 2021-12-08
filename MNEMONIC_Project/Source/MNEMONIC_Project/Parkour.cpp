@@ -149,17 +149,47 @@ void UParkourMovementComponent::Update()
 {
 	if(m_pClimbable)
 	{
-		// Has climbable surfac
+		// Has climbable surface
 
-		if(type == PARKOUR_TYPE::HLEFT)
+		GEngine->AddOnScreenDebugMessage(8, 0.1f, FColor::Green, FString::Printf(TEXT("Climb dir: %s."), *climbDir.ToString()));
+		if(type == PARKOUR_TYPE::HLEFT || type == PARKOUR_TYPE::HRIGHT)
 		{
+			m_pCharacter->SetCharacterEnabledGravity(false);
 			GEngine->AddOnScreenDebugMessage(5, 0.1f, FColor::Green, TEXT("Horizontally climbing."));
+
+			// Fix Z position being affected by jump.
+			if (climbDir.Z == 0)
+			{
+				FVector curPos = m_pCharacter->GetActorLocation();
+				m_pCharacter->SetActorLocation(FVector(curPos.X, curPos.Y, startPos.Z));
+			}
 			m_pCharacter->SetActorLocation(m_pCharacter->GetActorLocation() + climbDir * m_fHorizontalSpeed * GetWorld()->GetDeltaSeconds());
 		}
 		else if(type == PARKOUR_TYPE::VERTICAL)
 		{
+			m_pCharacter->SetCharacterEnabledGravity(false);
 			GEngine->AddOnScreenDebugMessage(5, 0.1f, FColor::Green, TEXT("Vertically climbing."));
+			if (climbDir.Z == 0)
+			{
+				FVector curPos = m_pCharacter->GetActorLocation();
+				m_pCharacter->SetActorLocation(FVector(curPos.X, curPos.Y, startPos.Z));
+			}
 			m_pCharacter->SetActorLocation(m_pCharacter->GetActorLocation() + climbDir * m_fVerticalSpeed * GetWorld()->GetDeltaSeconds());
+
+			// Ledge climb when at the top of the climbable surface. Feels better without it atm, too fast/teleport-like.
+			// It also just uses Z axis which is not good considering the climbable could be any axis. Needs local-to-world Z axis of climbable.
+
+			/*
+			FVector origin, box, charOrigin, charBox;
+			m_pClimbable->GetActorBounds(true, origin, box);
+			m_pCharacter->GetActorBounds(true, charOrigin, charBox);
+			GEngine->AddOnScreenDebugMessage(100, 0.1f, FColor::Green, FString::Printf(TEXT("Pos: %s - Box: %s."), *m_pCharacter->GetActorLocation().ToString(), *(origin + box).ToString()));
+			if(m_pCharacter->GetActorLocation().Z >= origin.Z + box.Z - charBox.Z)
+			{
+				GEngine->AddOnScreenDebugMessage(5, 0.1f, FColor::Green, TEXT("Hit top, climbing ledge."));
+				m_pCharacter->SetActorLocation(m_pCharacter->GetActorLocation() + (m_pCharacter->GetActorUpVector() * charBox.Z * 2));
+				m_pCharacter->SetActorLocation(m_pCharacter->GetActorLocation() + m_pCharacter->GetActorForwardVector() * charBox.X * 2);
+			}*/
 		}
 		else if(type == PARKOUR_TYPE::LEDGE)
 		{
@@ -174,6 +204,7 @@ void UParkourMovementComponent::Update()
 		if(!UKismetSystemLibrary::SphereTraceSingleForObjects(GetWorld(), m_pCharacter->GetActorLocation(), m_pCharacter->GetActorLocation(), 
 			m_fDistanceToWall, traceObjects, false, actorsToIgnore, EDrawDebugTrace::ForOneFrame, hitResult, true))
 		{
+			m_pCharacter->SetCharacterEnabledGravity(true);
 			GEngine->AddOnScreenDebugMessage(6, 0.1f, FColor::Green, TEXT("Out of climb distance 1."));
 			m_pClimbable = nullptr;
 			m_fTimeForEnabledClimb = FTimespan::FromSeconds(GetWorld()->GetTimeSeconds()).GetTotalMilliseconds() + m_fTimeBetweenClimb;
@@ -181,6 +212,7 @@ void UParkourMovementComponent::Update()
 
 		if(FVector::DistSquared(startPos, m_pCharacter->GetActorLocation()) > m_fDistance * m_fDistance)
 		{
+			m_pCharacter->SetCharacterEnabledGravity(true);
 			GEngine->AddOnScreenDebugMessage(6, 0.1f, FColor::Green, TEXT("Out of climb distance 2."));
 			m_pClimbable = nullptr;
 			m_fTimeForEnabledClimb = FTimespan::FromSeconds(GetWorld()->GetTimeSeconds()).GetTotalMilliseconds() + m_fTimeBetweenClimb;
@@ -217,6 +249,7 @@ void UParkourMovementComponent::Update()
 				type = PARKOUR_TYPE::VERTICAL;
 				//m_fDistance = m_pClimbable->m_fVerticalClimbDistance > m_fVerticalDistance ? m_pClimbable->m_fVerticalClimbDistance : m_fVerticalDistance;
 				m_pClimbable = climbable;
+				climbDir = m_pClimbable->GetActorUpVector();
 			}
 		}
 		else if (UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), startPos, startPos + right * m_fDistanceToWall, traceObjects,

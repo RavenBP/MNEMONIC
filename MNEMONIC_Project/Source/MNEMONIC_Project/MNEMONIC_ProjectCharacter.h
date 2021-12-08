@@ -100,6 +100,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStateManagerComponent* StateManager;
 
+	void SetCharacterEnabledGravity(bool enabled = true);
+
 
 protected:
 	

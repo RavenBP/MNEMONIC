@@ -179,7 +179,7 @@ void UParkourMovementComponent::Update()
 			// Ledge climb when at the top of the climbable surface. Feels better without it atm, too fast/teleport-like.
 			// It also just uses Z axis which is not good considering the climbable could be any axis. Needs local-to-world Z axis of climbable.
 
-			/*
+			
 			FVector origin, box, charOrigin, charBox;
 			m_pClimbable->GetActorBounds(true, origin, box);
 			m_pCharacter->GetActorBounds(true, charOrigin, charBox);
@@ -189,7 +189,7 @@ void UParkourMovementComponent::Update()
 				GEngine->AddOnScreenDebugMessage(5, 0.1f, FColor::Green, TEXT("Hit top, climbing ledge."));
 				m_pCharacter->SetActorLocation(m_pCharacter->GetActorLocation() + (m_pCharacter->GetActorUpVector() * charBox.Z * 2));
 				m_pCharacter->SetActorLocation(m_pCharacter->GetActorLocation() + m_pCharacter->GetActorForwardVector() * charBox.X * 2);
-			}*/
+			}
 		}
 		else if(type == PARKOUR_TYPE::LEDGE)
 		{
@@ -204,18 +204,14 @@ void UParkourMovementComponent::Update()
 		if(!UKismetSystemLibrary::SphereTraceSingleForObjects(GetWorld(), m_pCharacter->GetActorLocation(), m_pCharacter->GetActorLocation(), 
 			m_fDistanceToWall, traceObjects, false, actorsToIgnore, EDrawDebugTrace::ForOneFrame, hitResult, true))
 		{
-			m_pCharacter->SetCharacterEnabledGravity(true);
-			GEngine->AddOnScreenDebugMessage(6, 0.1f, FColor::Green, TEXT("Out of climb distance 1."));
-			m_pClimbable = nullptr;
-			m_fTimeForEnabledClimb = FTimespan::FromSeconds(GetWorld()->GetTimeSeconds()).GetTotalMilliseconds() + m_fTimeBetweenClimb;
+			GEngine->AddOnScreenDebugMessage(6, 0.1f, FColor::Green, TEXT("Out of climb distance. (1)"));
+			StopParkourMovement();
 		}
 
 		if(FVector::DistSquared(startPos, m_pCharacter->GetActorLocation()) > m_fDistance * m_fDistance)
 		{
-			m_pCharacter->SetCharacterEnabledGravity(true);
-			GEngine->AddOnScreenDebugMessage(6, 0.1f, FColor::Green, TEXT("Out of climb distance 2."));
-			m_pClimbable = nullptr;
-			m_fTimeForEnabledClimb = FTimespan::FromSeconds(GetWorld()->GetTimeSeconds()).GetTotalMilliseconds() + m_fTimeBetweenClimb;
+			GEngine->AddOnScreenDebugMessage(6, 0.1f, FColor::Green, TEXT("Out of climb distance. (2)"));
+			StopParkourMovement();
 		}
 	}
 	else if(FTimespan::FromSeconds(GetWorld()->GetTimeSeconds()).GetTotalMilliseconds() >= m_fTimeForEnabledClimb)
@@ -294,4 +290,11 @@ void UParkourMovementComponent::Update()
 PARKOUR_TYPE UParkourMovementComponent::GetParkourType()
 {
 	return type;
+}
+
+void UParkourMovementComponent::StopParkourMovement()
+{
+	m_pCharacter->SetCharacterEnabledGravity(true);
+	m_pClimbable = nullptr;
+	m_fTimeForEnabledClimb = FTimespan::FromSeconds(GetWorld()->GetTimeSeconds()).GetTotalMilliseconds() + m_fTimeBetweenClimb;
 }

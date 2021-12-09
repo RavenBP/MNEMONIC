@@ -69,6 +69,11 @@ public:
 	void Update();
 	PARKOUR_TYPE GetParkourType();
 
+	/// <summary>
+	/// Stop any active parkour movement if necessary. Removes climbable and sets gravity of character back.
+	/// </summary>
+	void StopParkourMovement();
+
 private:
 	AMNEMONIC_ProjectCharacter* m_pCharacter;
 

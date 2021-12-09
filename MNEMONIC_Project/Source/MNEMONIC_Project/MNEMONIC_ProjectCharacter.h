@@ -102,6 +102,8 @@ public:
 
 	void SetCharacterEnabledGravity(bool enabled = true);
 
+	void SetCharacterVelocity(FVector velocity);
+
 
 protected:
 	

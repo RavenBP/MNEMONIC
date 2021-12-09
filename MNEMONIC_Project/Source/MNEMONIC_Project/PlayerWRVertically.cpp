@@ -27,3 +27,9 @@ void UPlayerWRVertically::OnExitState()
 	Super::OnExitState();
 	PlayerRef->GetCharacterMovement()->GravityScale = 1;
 }
+
+void UPlayerWRVertically::PressJump()
+{
+	Super::PressJump();
+	PlayerRef->m_pParkour->JumpOffWall();
+}

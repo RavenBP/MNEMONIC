@@ -168,7 +168,11 @@ void AMNEMONIC_ProjectCharacter::SetupPlayerInputComponent(class UInputComponent
 void AMNEMONIC_ProjectCharacter::SetCharacterEnabledGravity(bool enabled)
 {
 	GetCharacterMovement()->GravityScale = enabled ? 1 : 0;
-	GetCharacterMovement()->Velocity = FVector::ZeroVector;
+}
+
+void AMNEMONIC_ProjectCharacter::SetCharacterVelocity(FVector velocity)
+{
+	GetCharacterMovement()->Velocity = velocity;
 }
 
 void AMNEMONIC_ProjectCharacter::OnFire()

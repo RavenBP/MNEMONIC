@@ -22,6 +22,9 @@ AClimbable::AClimbable()
 
 	m_fHorizontalClimbDistance = 0;
 	m_fVerticalClimbDistance = 0;
+
+	m_fLateralJumpForce = 0;
+	m_fVerticalJumpForce = 0;
 }
 
 // Called when the game starts or when spawned

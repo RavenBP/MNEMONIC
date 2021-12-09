@@ -54,6 +54,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float MaxSpeed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float m_fLateralJumpForce;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float m_fVerticalJumpForce;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float m_fForwardJumpForce;
+
 	//Begin UActorComponent Interface
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	virtual void PostLoad() override;
@@ -74,12 +83,18 @@ public:
 	/// </summary>
 	void StopParkourMovement();
 
+	/// <summary>
+	/// Force player to jump off the wall they're currently on.
+	/// </summary>
+	void JumpOffWall();
+
 private:
 	AMNEMONIC_ProjectCharacter* m_pCharacter;
 
 	AClimbable* m_pClimbable;
 	FVector startPos;
 	FVector climbDir;
+	FVector wallNormal;
 	float m_fDistance;
 	float m_fTimeForEnabledClimb;
 

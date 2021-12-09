@@ -18,4 +18,5 @@ protected:
 	virtual void OnEnterState(AActor* StateOwner) override;
 	virtual void TickState() override;
 	virtual void OnExitState() override;
+	virtual void PressJump() override;
 };

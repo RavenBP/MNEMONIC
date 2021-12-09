@@ -36,6 +36,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWRite, Category = "Climb settings")
 		float m_fVerticalClimbDistance;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWRite, Category = "Climb settings")
+		float m_fLateralJumpForce;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWRite, Category = "Climb settings")
+		float m_fVerticalJumpForce;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Climb settings")
+		float m_fForwardJumpForce;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

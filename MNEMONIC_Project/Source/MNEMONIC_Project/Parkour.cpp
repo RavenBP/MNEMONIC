@@ -52,11 +52,6 @@ void UParkourMovementComponent::Update()
 		else if(type == PARKOUR_TYPE::VERTICAL)
 		{
 			GEngine->AddOnScreenDebugMessage(5, 0.1f, FColor::Green, TEXT("Vertically climbing."));
-			if (climbDir.Z == 0)
-			{
-				FVector curPos = m_pCharacter->GetActorLocation();
-				m_pCharacter->SetActorLocation(FVector(curPos.X, curPos.Y, startPos.Z));
-			}
 			m_pCharacter->SetActorLocation(m_pCharacter->GetActorLocation() + climbDir * m_fRequiredSpeed * GetWorld()->GetDeltaSeconds());
 
 			// Ledge climb when at the top of the climbable surface. Feels better without it atm, too fast/teleport-like.
@@ -218,6 +213,7 @@ void UParkourMovementComponent::Dash()
 	if (FTimespan::FromSeconds(GetWorld()->GetTimeSeconds()).GetTotalMilliseconds() >= m_fTimeForEnabledDash)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, TEXT("Dashing!"));
+		m_pCharacter->SetCharacterVelocity(FVector::ZeroVector);
 		m_pCharacter->GetCharacterMovement()->AddImpulse(m_pCharacter->GetActorForwardVector() * m_fDashForce);
 		m_fTimeForEnabledDash = FTimespan::FromSeconds(GetWorld()->GetTimeSeconds()).GetTotalMilliseconds() + m_fTimeBetweenDashes;
 		m_bCanDash = false; // Will be enabled after landing or jumping off wall run.

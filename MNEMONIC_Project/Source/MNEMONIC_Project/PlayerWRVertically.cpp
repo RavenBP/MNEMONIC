@@ -10,6 +10,7 @@ void UPlayerWRVertically::OnEnterState(AActor* StateOwner)
 	Super::OnEnterState(StateOwner);
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, "Enter Vertical State");
 	PlayerRef->SetCharacterGravityScale(PlayerRef->m_pParkour->GetRequiredGravity());
+	PlayerRef->SetCharacterVelocity(FVector::ZeroVector);
 }
 
 void UPlayerWRVertically::TickState()

@@ -9,6 +9,8 @@ void ACustomPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ACustomPlayerController::PressJump);
 	InputComponent->BindAction("Slide", EInputEvent::IE_Pressed, this, &ACustomPlayerController::PressSlide);
+	InputComponent->BindAction("Run", EInputEvent::IE_Pressed, this, &ACustomPlayerController::PressRun);
+	InputComponent->BindAction("Run", EInputEvent::IE_Released, this, &ACustomPlayerController::ReleaseRun);
 	InputComponent->BindAction("Fire", EInputEvent::IE_Pressed, this, &ACustomPlayerController::PressFire);
 	InputComponent->BindAction("Fire", EInputEvent::IE_Released, this, &ACustomPlayerController::ReleaseFire);
 	InputComponent->BindAxis("MoveForward", this, &ACustomPlayerController::PressMoveForward);
@@ -29,6 +31,22 @@ void ACustomPlayerController::PressSlide()
 	if(SlideDelegate.IsBound())
 	{
 		SlideDelegate.Broadcast();
+	}
+}
+
+void ACustomPlayerController::PressRun()
+{
+	if(RunDelegate.IsBound())
+	{
+		RunDelegate.Broadcast(true);
+	}
+}
+
+void ACustomPlayerController::ReleaseRun()
+{
+	if (RunDelegate.IsBound())
+	{
+		RunDelegate.Broadcast(false);
 	}
 }
 
@@ -72,6 +90,11 @@ FJumpSignature* ACustomPlayerController::GetJumpDelegate()
 FSlideSignature* ACustomPlayerController::GetSlideDelegate()
 {
 	return &SlideDelegate;
+}
+
+FRunSignature* ACustomPlayerController::GetRunDelegate()
+{
+	return &RunDelegate;
 }
 
 FSecondaryWeaponSignature* ACustomPlayerController::GetSecondaryWeaponDelegate()

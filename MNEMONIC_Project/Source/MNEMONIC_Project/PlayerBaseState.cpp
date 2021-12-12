@@ -2,6 +2,8 @@
 
 
 #include "PlayerBaseState.h"
+
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -24,6 +26,7 @@ void UPlayerBaseState::OnEnterState(AActor* StateOwner)
 	{
 		PlayerController->GetJumpDelegate()->AddUObject(this, &UPlayerBaseState::PressJump);
 		PlayerController->GetSlideDelegate()->AddUObject(this, &UPlayerBaseState::PressSlide);
+		PlayerController->GetRunDelegate()->AddUObject(this, &UPlayerBaseState::PressRun);
 		PlayerController->GetSecondaryWeaponDelegate()->AddUObject(this, &UPlayerBaseState::PressSecondaryWeapon);
 		PlayerController->GetMoveForwardDelegate()->AddUObject(this, &UPlayerBaseState::PressMoveForward);
 		PlayerController->GetMoveRightDelegate()->AddUObject(this, &UPlayerBaseState::PressMoveRight);
@@ -33,11 +36,14 @@ void UPlayerBaseState::OnEnterState(AActor* StateOwner)
 void UPlayerBaseState::OnExitState()
 {
 	Super::OnExitState();
+
+	PlayerRef->GetCharacterMovement()->MaxWalkSpeed = PlayerRef->m_pParkour->m_fWalkSpeed;
 	
 	if(PlayerController)
 	{
 		PlayerController->GetJumpDelegate()->RemoveAll(this);
 		PlayerController->GetSlideDelegate()->RemoveAll(this);
+		PlayerController->GetRunDelegate()->RemoveAll(this);
 		PlayerController->GetMoveForwardDelegate()->RemoveAll(this);
 		PlayerController->GetMoveRightDelegate()->RemoveAll(this);
 		PlayerController->GetSecondaryWeaponDelegate()->RemoveAll(this);
@@ -51,6 +57,18 @@ void UPlayerBaseState::PressJump()
 void UPlayerBaseState::PressSlide()
 {
 	
+}
+
+void UPlayerBaseState::PressRun(bool value)
+{
+	if(value)
+	{
+		PlayerRef->GetCharacterMovement()->MaxWalkSpeed = PlayerRef->m_pParkour->m_fRunSpeed;
+	}
+	else
+	{
+		PlayerRef->GetCharacterMovement()->MaxWalkSpeed = PlayerRef->m_pParkour->m_fWalkSpeed;
+	}
 }
 
 void UPlayerBaseState::PressMoveForward(float value)

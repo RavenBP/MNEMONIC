@@ -100,7 +100,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStateManagerComponent* StateManager;
 
-	void SetCharacterEnabledGravity(bool enabled = true);
+	void SetCharacterGravityScale(float scale);
 
 	void SetCharacterVelocity(FVector velocity);
 

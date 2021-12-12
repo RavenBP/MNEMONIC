@@ -10,6 +10,14 @@ void UPlayerInAirState::PressJump()
 	Super::PressJump();
 }
 
+void UPlayerInAirState::PressRun(bool value)
+{
+	Super::PressRun(value);
+
+	if(value)
+		PlayerRef->m_pParkour->Dash();
+}
+
 void UPlayerInAirState::TickState()
 {
 	Super::TickState();

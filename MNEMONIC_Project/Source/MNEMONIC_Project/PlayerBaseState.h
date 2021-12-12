@@ -27,6 +27,7 @@ public:
 protected:
 	virtual void PressJump();
 	virtual void PressSlide();
+	virtual void PressRun(bool value);
 	virtual void PressMoveForward(float value);
 	virtual void PressMoveRight(float value);
 	virtual void PressSecondaryWeapon(bool value);

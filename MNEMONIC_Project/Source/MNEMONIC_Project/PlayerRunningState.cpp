@@ -5,6 +5,13 @@
 
 #include "GameFramework/CharacterMovementComponent.h"
 
+void UPlayerRunningState::OnEnterState(AActor* StateOwner)
+{
+	Super::OnEnterState(StateOwner);
+
+	PlayerRef->m_pParkour->SetCanDash();
+}
+
 void UPlayerRunningState::PressJump()
 {
 	Super::PressJump();

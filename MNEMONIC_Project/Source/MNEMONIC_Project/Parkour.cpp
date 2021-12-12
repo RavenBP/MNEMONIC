@@ -17,7 +17,7 @@ void UParkourMovementComponent::SetCharacter(AMNEMONIC_ProjectCharacter* charact
 }
 
 void UParkourMovementComponent::TickComponent(float DeltaTime, ELevelTick Tick,
-	FActorComponentTickFunction* ThisTickFunction)
+                                              FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, Tick, ThisTickFunction);
 }
@@ -47,7 +47,7 @@ void UParkourMovementComponent::Update()
 		if(type == PARKOUR_TYPE::HLEFT || type == PARKOUR_TYPE::HRIGHT)
 		{
 			GEngine->AddOnScreenDebugMessage(5, 0.1f, FColor::Green, TEXT("Horizontally climbing."));
-			m_pCharacter->SetActorLocation(m_pCharacter->GetActorLocation() + climbDir * m_fHorizontalSpeed * GetWorld()->GetDeltaSeconds());
+			m_pCharacter->SetActorLocation(m_pCharacter->GetActorLocation() + climbDir * m_fRequiredSpeed * GetWorld()->GetDeltaSeconds());
 		}
 		else if(type == PARKOUR_TYPE::VERTICAL)
 		{
@@ -57,7 +57,7 @@ void UParkourMovementComponent::Update()
 				FVector curPos = m_pCharacter->GetActorLocation();
 				m_pCharacter->SetActorLocation(FVector(curPos.X, curPos.Y, startPos.Z));
 			}
-			m_pCharacter->SetActorLocation(m_pCharacter->GetActorLocation() + climbDir * m_fVerticalSpeed * GetWorld()->GetDeltaSeconds());
+			m_pCharacter->SetActorLocation(m_pCharacter->GetActorLocation() + climbDir * m_fRequiredSpeed * GetWorld()->GetDeltaSeconds());
 
 			// Ledge climb when at the top of the climbable surface. Feels better without it atm, too fast/teleport-like.
 			// It also just uses Z axis which is not good considering the climbable could be any axis. Needs local-to-world Z axis of climbable.
@@ -127,7 +127,9 @@ void UParkourMovementComponent::Update()
 				GEngine->AddOnScreenDebugMessage(0, 0.1f, FColor::Green, FString::Printf(TEXT("Found climbable in front: %s"), *climbable->GetFName().ToString()));
 				type = PARKOUR_TYPE::VERTICAL;
 				m_pClimbable = climbable;
-				m_fDistance = m_pClimbable->m_fVerticalClimbDistance > 0 ? m_pClimbable->m_fVerticalClimbDistance : m_fVerticalDistance;
+				m_fDistance = m_pClimbable->m_ClimbingStats.m_fVerticalDistance > 0 ? m_pClimbable->m_ClimbingStats.m_fVerticalDistance : m_ClimbingStats.m_fVerticalDistance;
+				m_fRequiredSpeed = m_pClimbable->m_ClimbingStats.m_fVerticalSpeed > 0 ? m_pClimbable->m_ClimbingStats.m_fVerticalSpeed : m_ClimbingStats.m_fVerticalSpeed;
+				m_fRequiredGravity = m_pClimbable->m_ClimbingStats.m_fVerticalGravity > 0 ? m_pClimbable->m_ClimbingStats.m_fVerticalGravity : m_ClimbingStats.m_fVerticalGravity;
 				climbDir = m_pClimbable->GetActorUpVector();
 			}
 		}
@@ -146,7 +148,9 @@ void UParkourMovementComponent::Update()
 				m_pClimbable = climbable;
 				climbDir = cross;
 				type = PARKOUR_TYPE::HRIGHT;
-				m_fDistance = m_pClimbable->m_fHorizontalClimbDistance > 0 ? m_pClimbable->m_fHorizontalClimbDistance : m_fHorizontalDistance;
+				m_fDistance = m_pClimbable->m_ClimbingStats.m_fHorizontalDistance > 0 ? m_pClimbable->m_ClimbingStats.m_fHorizontalDistance : m_ClimbingStats.m_fHorizontalDistance;
+				m_fRequiredSpeed = m_pClimbable->m_ClimbingStats.m_fHorizontalSpeed > 0 ? m_pClimbable->m_ClimbingStats.m_fHorizontalSpeed : m_ClimbingStats.m_fHorizontalSpeed;
+				m_fRequiredGravity = m_pClimbable->m_ClimbingStats.m_fHorizontalGravity > 0 ? m_pClimbable->m_ClimbingStats.m_fHorizontalGravity : m_ClimbingStats.m_fHorizontalGravity;
 				GEngine->AddOnScreenDebugMessage(0, 0.1f, FColor::Green, FString::Printf(TEXT("Found climbable in right: %s"), *climbable->GetFName().ToString()));
 			}
 		}
@@ -165,7 +169,9 @@ void UParkourMovementComponent::Update()
 				m_pClimbable = climbable;
 				climbDir = -cross;
 				type = PARKOUR_TYPE::HLEFT;
-				m_fDistance = m_pClimbable->m_fHorizontalClimbDistance > 0 ? m_pClimbable->m_fHorizontalClimbDistance : m_fHorizontalDistance;
+				m_fDistance = m_pClimbable->m_ClimbingStats.m_fHorizontalDistance > 0 ? m_pClimbable->m_ClimbingStats.m_fHorizontalDistance : m_ClimbingStats.m_fHorizontalDistance;
+				m_fRequiredSpeed = m_pClimbable->m_ClimbingStats.m_fHorizontalSpeed > 0 ? m_pClimbable->m_ClimbingStats.m_fHorizontalSpeed : m_ClimbingStats.m_fHorizontalSpeed;
+				m_fRequiredGravity = m_pClimbable->m_ClimbingStats.m_fHorizontalGravity > 0 ? m_pClimbable->m_ClimbingStats.m_fHorizontalGravity : m_ClimbingStats.m_fHorizontalGravity;
 				GEngine->AddOnScreenDebugMessage(0, 0.1f, FColor::Green, FString::Printf(TEXT("Found climbable in left: %s"), *climbable->GetFName().ToString()));
 			}
 		}
@@ -187,19 +193,44 @@ void UParkourMovementComponent::JumpOffWall()
 {
 	if(m_pClimbable)
 	{
-		const float lateralJump = m_pClimbable->m_fLateralJumpForce > 0 ? m_pClimbable->m_fLateralJumpForce : m_fLateralJumpForce;
-		const float verticalJump = m_pClimbable->m_fVerticalJumpForce > 0 ? m_pClimbable->m_fVerticalJumpForce : m_fVerticalJumpForce;
-		const float forwardJump = m_pClimbable->m_fForwardJumpForce > 0 ? m_pClimbable->m_fForwardJumpForce : m_fForwardJumpForce;
+		m_bCanDash = true;
+		const float lateralJump = m_pClimbable->m_ClimbingStats.m_fLateralJumpForce > 0 ? m_pClimbable->m_ClimbingStats.m_fLateralJumpForce : m_ClimbingStats.m_fLateralJumpForce;
+		const float verticalJump = m_pClimbable->m_ClimbingStats.m_fVerticalJumpForce > 0 ? m_pClimbable->m_ClimbingStats.m_fVerticalJumpForce : m_ClimbingStats.m_fVerticalJumpForce;
 		//GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, FString::Printf(TEXT("Wall normal: %s"), *wallNormal.ToString()));
-		m_pCharacter->SetCharacterEnabledGravity(true);
+		m_pCharacter->SetCharacterGravityScale(1);
 		if(type == PARKOUR_TYPE::VERTICAL)
 		{
-			m_pCharacter->SetCharacterVelocity(climbDir * verticalJump + wallNormal * forwardJump);
+			const float backwardJump = m_pClimbable->m_ClimbingStats.m_fBackwardJumpForce > 0 ? m_pClimbable->m_ClimbingStats.m_fBackwardJumpForce : m_ClimbingStats.m_fBackwardJumpForce;
+			m_pCharacter->SetCharacterVelocity(climbDir * verticalJump + wallNormal * backwardJump);
 		}
 		else
 		{
+			const float forwardJump = m_pClimbable->m_ClimbingStats.m_fForwardJumpForce > 0 ? m_pClimbable->m_ClimbingStats.m_fForwardJumpForce : m_ClimbingStats.m_fForwardJumpForce;
 			m_pCharacter->SetCharacterVelocity(climbDir * forwardJump + wallNormal * lateralJump + m_pClimbable->GetActorUpVector() * verticalJump);
 		}
 		StopParkourMovement();
 	}
+}
+
+void UParkourMovementComponent::Dash()
+{
+	if (!m_bCanDash) return;
+	if (FTimespan::FromSeconds(GetWorld()->GetTimeSeconds()).GetTotalMilliseconds() >= m_fTimeForEnabledDash)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, TEXT("Dashing!"));
+		m_pCharacter->GetCharacterMovement()->AddImpulse(m_pCharacter->GetActorForwardVector() * m_fDashForce);
+		m_fTimeForEnabledDash = FTimespan::FromSeconds(GetWorld()->GetTimeSeconds()).GetTotalMilliseconds() + m_fTimeBetweenDashes;
+		m_bCanDash = false; // Will be enabled after landing or jumping off wall run.
+		OnDashed.Broadcast();
+	}
+}
+
+void UParkourMovementComponent::SetCanDash(bool enable)
+{
+	m_bCanDash = enable;
+}
+
+float UParkourMovementComponent::GetRequiredGravity()
+{
+	return m_fRequiredGravity;
 }

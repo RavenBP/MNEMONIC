@@ -9,7 +9,7 @@ void UPlayerWRVertically::OnEnterState(AActor* StateOwner)
 {
 	Super::OnEnterState(StateOwner);
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, "Enter Vertical State");
-	PlayerRef->GetCharacterMovement()->GravityScale = 0;
+	PlayerRef->SetCharacterGravityScale(PlayerRef->m_pParkour->GetRequiredGravity());
 }
 
 void UPlayerWRVertically::TickState()
@@ -25,7 +25,7 @@ void UPlayerWRVertically::TickState()
 void UPlayerWRVertically::OnExitState()
 {
 	Super::OnExitState();
-	PlayerRef->GetCharacterMovement()->GravityScale = 1;
+	PlayerRef->SetCharacterGravityScale(1);
 }
 
 void UPlayerWRVertically::PressJump()

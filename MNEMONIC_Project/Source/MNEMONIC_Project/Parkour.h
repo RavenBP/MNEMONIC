@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/MovementComponent.h"
 #include "Climbable.h"
+#include "ClimbingStats.h"
 
 /**
  * 
@@ -21,6 +22,7 @@ enum class PARKOUR_TYPE
 };
 
 class AMNEMONIC_ProjectCharacter;
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE(FDashEvent, UParkourMovementComponent, OnDashed);
 
 /**
  *
@@ -34,34 +36,31 @@ public:
 	void SetCharacter(AMNEMONIC_ProjectCharacter* character);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float m_fDashForce;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float m_fRunSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float m_fWalkSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float m_fDistanceToWall;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float m_fVerticalSpeed;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float m_fVerticalDistance;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float m_fHorizontalSpeed;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float m_fHorizontalDistance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float m_fTimeBetweenClimb;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float m_fTimeBetweenDashes;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float MaxSpeed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float m_fLateralJumpForce;
+		FClimbingStats m_ClimbingStats;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float m_fVerticalJumpForce;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float m_fForwardJumpForce;
+	UPROPERTY(BlueprintAssignable, Category = "Dash Event")
+		FDashEvent OnDashed;
 
 	//Begin UActorComponent Interface
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -88,6 +87,19 @@ public:
 	/// </summary>
 	void JumpOffWall();
 
+	/// <summary>
+	/// Force player to dash forward.
+	/// </summary>
+	void Dash();
+
+	/// <summary>
+	/// Set the player to be able to dash
+	/// </summary>
+	/// <param name="enable">Yes/No</param>
+	void SetCanDash(bool enable = true);
+
+	float GetRequiredGravity();
+
 private:
 	AMNEMONIC_ProjectCharacter* m_pCharacter;
 
@@ -97,7 +109,10 @@ private:
 	FVector wallNormal;
 	float m_fDistance;
 	float m_fTimeForEnabledClimb;
-
+	float m_fTimeForEnabledDash;
+	float m_fRequiredGravity;
+	float m_fRequiredSpeed;
+	bool m_bCanDash;
 	
 
 	PARKOUR_TYPE type;

@@ -9,7 +9,7 @@ void UPlayerWRHorizontally::OnEnterState(AActor* StateOwner)
 {
 	Super::OnEnterState(StateOwner);
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, "Enter Horizontal State");
-	PlayerRef->SetCharacterEnabledGravity(false);
+	PlayerRef->SetCharacterGravityScale(PlayerRef->m_pParkour->GetRequiredGravity());
 	PlayerRef->SetCharacterVelocity(FVector::ZeroVector);
 }
 
@@ -22,7 +22,7 @@ void UPlayerWRHorizontally::TickState()
 void UPlayerWRHorizontally::OnExitState()
 {
 	Super::OnExitState();
-	PlayerRef->SetCharacterEnabledGravity(true);
+	PlayerRef->SetCharacterGravityScale(1);
 }
 
 void UPlayerWRHorizontally::PressJump()

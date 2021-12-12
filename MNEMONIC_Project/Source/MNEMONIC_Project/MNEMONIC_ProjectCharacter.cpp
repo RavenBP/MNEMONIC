@@ -113,6 +113,7 @@ void AMNEMONIC_ProjectCharacter::BeginPlay()
 	}*/
 	
 	m_pParkour->SetCharacter(this);
+	GetCharacterMovement()->MaxWalkSpeed = m_pParkour->m_fWalkSpeed;
 	Combat.SetCharacter(this);
 
 	if(Combat.m_Weapon)
@@ -165,9 +166,10 @@ void AMNEMONIC_ProjectCharacter::SetupPlayerInputComponent(class UInputComponent
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AMNEMONIC_ProjectCharacter::LookUpAtRate);
 }
 
-void AMNEMONIC_ProjectCharacter::SetCharacterEnabledGravity(bool enabled)
+void AMNEMONIC_ProjectCharacter::SetCharacterGravityScale(float scale)
 {
-	GetCharacterMovement()->GravityScale = enabled ? 1 : 0;
+	GetCharacterMovement()->GravityScale = scale;
+	
 }
 
 void AMNEMONIC_ProjectCharacter::SetCharacterVelocity(FVector velocity)

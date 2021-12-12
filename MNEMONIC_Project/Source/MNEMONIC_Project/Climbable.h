@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ClimbingStats.h"
 #include "Climbable.generated.h"
 
 UCLASS()
@@ -30,20 +31,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWRite, Category = "Climb settings")
 		bool m_bCanClimbVertical;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWRite, Category = "Climb settings")
-		float m_fHorizontalClimbDistance;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWRite, Category = "Climb settings")
-		float m_fVerticalClimbDistance;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWRite, Category = "Climb settings")
-		float m_fLateralJumpForce;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWRite, Category = "Climb settings")
-		float m_fVerticalJumpForce;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Climb settings")
-		float m_fForwardJumpForce;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		FClimbingStats m_ClimbingStats;
 
 protected:
 	// Called when the game starts or when spawned

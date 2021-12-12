@@ -19,12 +19,18 @@ AClimbable::AClimbable()
 	m_bCanClimbHorizontal = true;
 	m_bCanClimbVertical = true;
 	m_bCanClimbLedge = true;
+	
+	m_ClimbingStats.m_fHorizontalDistance = 0;
+	m_ClimbingStats.m_fHorizontalGravity = 0;
+	m_ClimbingStats.m_fHorizontalSpeed = 0;
+	m_ClimbingStats.m_fVerticalDistance = 0;
+	m_ClimbingStats.m_fVerticalGravity = 0;
+	m_ClimbingStats.m_fVerticalSpeed = 0;
 
-	m_fHorizontalClimbDistance = 0;
-	m_fVerticalClimbDistance = 0;
-
-	m_fLateralJumpForce = 0;
-	m_fVerticalJumpForce = 0;
+	m_ClimbingStats.m_fLateralJumpForce = 0;
+	m_ClimbingStats.m_fVerticalJumpForce = 0;
+	m_ClimbingStats.m_fForwardJumpForce = 0;
+	m_ClimbingStats.m_fBackwardJumpForce = 0;
 }
 
 // Called when the game starts or when spawned

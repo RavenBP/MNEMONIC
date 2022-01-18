@@ -11,8 +11,10 @@ void ACustomPlayerController::SetupInputComponent()
 	InputComponent->BindAction("Slide", EInputEvent::IE_Pressed, this, &ACustomPlayerController::PressSlide);
 	InputComponent->BindAction("Run", EInputEvent::IE_Pressed, this, &ACustomPlayerController::PressRun);
 	InputComponent->BindAction("Run", EInputEvent::IE_Released, this, &ACustomPlayerController::ReleaseRun);
-	InputComponent->BindAction("Fire", EInputEvent::IE_Pressed, this, &ACustomPlayerController::PressFire);
-	InputComponent->BindAction("Fire", EInputEvent::IE_Released, this, &ACustomPlayerController::ReleaseFire);
+	InputComponent->BindAction("PrimaryFire", EInputEvent::IE_Pressed, this, &ACustomPlayerController::PressPrimaryFire);
+	InputComponent->BindAction("PrimaryFire", EInputEvent::IE_Released, this, &ACustomPlayerController::ReleasePrimaryFire);
+	InputComponent->BindAction("SecondaryFire", EInputEvent::IE_Pressed, this, &ACustomPlayerController::PressSecondaryFire);
+	InputComponent->BindAction("SecondaryFire", EInputEvent::IE_Released, this, &ACustomPlayerController::ReleaseSecondaryFire);
 	InputComponent->BindAxis("MoveForward", this, &ACustomPlayerController::PressMoveForward);
 	InputComponent->BindAxis("MoveRight", this, &ACustomPlayerController::PressMoveRight);
 	
@@ -50,7 +52,7 @@ void ACustomPlayerController::ReleaseRun()
 	}
 }
 
-void ACustomPlayerController::PressFire()
+void ACustomPlayerController::PressSecondaryFire()
 {
 	if(SecondaryWeaponDelegate.IsBound())
 	{
@@ -58,11 +60,28 @@ void ACustomPlayerController::PressFire()
 	}
 }
 
-void ACustomPlayerController::ReleaseFire()
+void ACustomPlayerController::ReleaseSecondaryFire()
 {
 	if(SecondaryWeaponDelegate.IsBound())
 	{
 		SecondaryWeaponDelegate.Broadcast(false);
+	}
+}
+
+
+void ACustomPlayerController::PressPrimaryFire()
+{
+	if (PrimaryWeaponDelegate.IsBound())
+	{
+		PrimaryWeaponDelegate.Broadcast(true);
+	}
+}
+
+void ACustomPlayerController::ReleasePrimaryFire()
+{
+	if (PrimaryWeaponDelegate.IsBound())
+	{
+		PrimaryWeaponDelegate.Broadcast(false);
 	}
 }
 
@@ -95,6 +114,11 @@ FSlideSignature* ACustomPlayerController::GetSlideDelegate()
 FRunSignature* ACustomPlayerController::GetRunDelegate()
 {
 	return &RunDelegate;
+}
+
+FPrimaryWeaponSignature* ACustomPlayerController::GetPrimaryWeaponDelegate()
+{
+	return &PrimaryWeaponDelegate;
 }
 
 FSecondaryWeaponSignature* ACustomPlayerController::GetSecondaryWeaponDelegate()

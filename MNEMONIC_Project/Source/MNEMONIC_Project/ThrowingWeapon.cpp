@@ -10,10 +10,17 @@ AThrowingWeapon::AThrowingWeapon()
 	m_bThrowingBack = false;
 }
 
+void AThrowingWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+	startPos = m_pMesh->GetRelativeLocation();
+	startRot = m_pMesh->GetRelativeRotation();
+}
+
 void AThrowingWeapon::OnPressedPrimaryAttack()
 {
 	Super::OnPressedPrimaryAttack();
-	// Melee attack here
+	// Melee attack her
 }
 
 void AThrowingWeapon::OnPressedSecondaryAttack()
@@ -31,7 +38,7 @@ void AThrowingWeapon::OnPressedSecondaryAttack()
 
 		m_pMesh->SetSimulatePhysics(true);
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, "Throwing weapon!");
-		m_pMesh->AddImpulse(firingOrigin->GetForwardVector() * 500);
+		m_pMesh->AddImpulse(firingOrigin->GetForwardVector() * m_fThrowForce, NAME_None, true);
 	}
 }
 
@@ -73,6 +80,15 @@ void AThrowingWeapon::Tick(float DeltaSeconds)
 			m_pMesh->SetSimulatePhysics(false);
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Brought back weapon!"));
 			m_pMesh->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+			m_pMesh->SetRelativeLocation(startPos);
+			m_pMesh->SetRelativeRotation(startRot);
 		}
 	}
+}
+
+void AThrowingWeapon::PlayAnimation(UAnimMontage* montage, USkeletalMeshComponent* skelMesh)
+{
+	if (m_bThrowingBack) return;
+	if (m_pMesh->IsSimulatingPhysics()) return;
+	Super::PlayAnimation(montage, skelMesh);
 }

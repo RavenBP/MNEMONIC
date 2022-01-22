@@ -27,6 +27,7 @@ void UPlayerBaseState::OnEnterState(AActor* StateOwner)
 		PlayerController->GetJumpDelegate()->AddUObject(this, &UPlayerBaseState::PressJump);
 		PlayerController->GetSlideDelegate()->AddUObject(this, &UPlayerBaseState::PressSlide);
 		PlayerController->GetRunDelegate()->AddUObject(this, &UPlayerBaseState::PressRun);
+		PlayerController->GetPrimaryWeaponDelegate()->AddUObject(this, &UPlayerBaseState::PressPrimaryWeapon);
 		PlayerController->GetSecondaryWeaponDelegate()->AddUObject(this, &UPlayerBaseState::PressSecondaryWeapon);
 		PlayerController->GetMoveForwardDelegate()->AddUObject(this, &UPlayerBaseState::PressMoveForward);
 		PlayerController->GetMoveRightDelegate()->AddUObject(this, &UPlayerBaseState::PressMoveRight);
@@ -46,6 +47,7 @@ void UPlayerBaseState::OnExitState()
 		PlayerController->GetRunDelegate()->RemoveAll(this);
 		PlayerController->GetMoveForwardDelegate()->RemoveAll(this);
 		PlayerController->GetMoveRightDelegate()->RemoveAll(this);
+		PlayerController->GetPrimaryWeaponDelegate()->RemoveAll(this);
 		PlayerController->GetSecondaryWeaponDelegate()->RemoveAll(this);
 	}
 }
@@ -91,6 +93,25 @@ void UPlayerBaseState::PressMoveRight(float value)
 	}
 }
 
+void UPlayerBaseState::PressPrimaryWeapon(bool value)
+{
+	if (value == true) //pressed
+	{
+		if (PlayerRef->Combat.m_pWeapon)
+		{
+			PlayerRef->Combat.m_pWeapon->OnPressedPrimaryAttack();
+			PlayerRef->Combat.m_pWeapon->PlayAnimation(PlayerRef->Combat.m_pWeapon->primaryAnimation, PlayerRef->GetMesh1P());
+		}
+	}
+	else //released
+	{
+		if (PlayerRef->Combat.m_pWeapon)
+		{
+			PlayerRef->Combat.m_pWeapon->OnReleasedPrimaryAttack();
+		}
+	}
+}
+
 void UPlayerBaseState::PressSecondaryWeapon(bool value)
 {
 	if(value == true) //pressed
@@ -98,6 +119,7 @@ void UPlayerBaseState::PressSecondaryWeapon(bool value)
 		if (PlayerRef->Combat.m_pWeapon)
 		{
 			PlayerRef->Combat.m_pWeapon->OnPressedSecondaryAttack();
+			PlayerRef->Combat.m_pWeapon->PlayAnimation(PlayerRef->Combat.m_pWeapon->secondaryAnimation, PlayerRef->GetMesh1P());
 		}
 	}
 	else //released
@@ -107,5 +129,4 @@ void UPlayerBaseState::PressSecondaryWeapon(bool value)
 			PlayerRef->Combat.m_pWeapon->OnReleasedSecondaryAttack();
 		}
 	}
-	
 }

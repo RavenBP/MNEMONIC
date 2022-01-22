@@ -29,6 +29,14 @@ public:
 	virtual void OnPressedSecondaryAttack();
 	virtual void OnReleasedSecondaryAttack();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		UAnimMontage* primaryAnimation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		UAnimMontage* secondaryAnimation;
+
+	virtual void PlayAnimation(UAnimMontage* montage, USkeletalMeshComponent* skelMesh);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

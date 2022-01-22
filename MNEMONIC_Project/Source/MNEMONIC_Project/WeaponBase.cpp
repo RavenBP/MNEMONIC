@@ -38,6 +38,19 @@ void AWeaponBase::OnReleasedSecondaryAttack()
 {
 }
 
+void AWeaponBase::PlayAnimation(UAnimMontage* montage, USkeletalMeshComponent* skelMesh)
+{
+	if (montage != nullptr)
+	{
+		UAnimInstance* AnimInstance = skelMesh->GetAnimInstance();
+		if (AnimInstance != nullptr)
+		{
+			if (AnimInstance->IsAnyMontagePlaying()) return;
+			AnimInstance->Montage_Play(montage, 1.f);
+		}
+	}
+}
+
 // Called when the game starts or when spawned
 void AWeaponBase::BeginPlay()
 {

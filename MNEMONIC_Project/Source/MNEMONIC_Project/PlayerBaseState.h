@@ -30,6 +30,7 @@ protected:
 	virtual void PressRun(bool value);
 	virtual void PressMoveForward(float value);
 	virtual void PressMoveRight(float value);
+	virtual void PressPrimaryWeapon(bool value);
 	virtual void PressSecondaryWeapon(bool value);
 	
 };

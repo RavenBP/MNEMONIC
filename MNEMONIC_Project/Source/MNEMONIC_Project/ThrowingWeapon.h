@@ -6,6 +6,7 @@
 #include "WeaponBase.h"
 #include "ThrowingWeapon.generated.h"
 
+class UAnimMontage;
 /**
  * 
  */
@@ -16,10 +17,12 @@ class MNEMONIC_PROJECT_API AThrowingWeapon : public AWeaponBase
 
 public:
 	AThrowingWeapon();
+	virtual void BeginPlay() override;
 	virtual void OnPressedPrimaryAttack() override;
 	virtual void OnPressedSecondaryAttack() override;
 	virtual void OnReleasedSecondaryAttack() override;
 	virtual void Tick(float DeltaSeconds) override;
+	virtual void PlayAnimation(UAnimMontage* montage, USkeletalMeshComponent* skelMesh) override;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Stats)
 		float m_fRetractSpeed = 5;
@@ -27,8 +30,13 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Stats)
 		float m_fRetractDistance = 2;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Stats)
+		float m_fThrowForce = 500;
+
 private:
 	FName socketAttachedName;
 	USceneComponent* attachedComponent;
 	bool m_bThrowingBack;
+	FVector startPos;
+	FRotator startRot;
 };

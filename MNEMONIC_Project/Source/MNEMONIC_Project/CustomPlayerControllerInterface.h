@@ -10,6 +10,7 @@
 DECLARE_MULTICAST_DELEGATE(FJumpSignature);
 DECLARE_MULTICAST_DELEGATE(FSlideSignature);
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FPrimaryWeaponSignature, bool);
 DECLARE_MULTICAST_DELEGATE_OneParam(FSecondaryWeaponSignature, bool);
 DECLARE_MULTICAST_DELEGATE_OneParam(FMoveForwardSignature, float);
 DECLARE_MULTICAST_DELEGATE_OneParam(FMoveRightSignature, float);
@@ -34,6 +35,7 @@ public:
 	virtual FJumpSignature* GetJumpDelegate() = 0;
 	virtual FSlideSignature* GetSlideDelegate() = 0;
 	virtual FRunSignature* GetRunDelegate() = 0;
+	virtual FPrimaryWeaponSignature* GetPrimaryWeaponDelegate() = 0;
 	virtual FSecondaryWeaponSignature* GetSecondaryWeaponDelegate() = 0;
 	virtual FMoveForwardSignature* GetMoveForwardDelegate() = 0;
 	virtual FMoveRightSignature* GetMoveRightDelegate() = 0;

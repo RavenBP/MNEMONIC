@@ -32,6 +32,7 @@ protected:
 	virtual FSecondaryWeaponSignature* GetSecondaryWeaponDelegate() override;
 	virtual FMoveForwardSignature* GetMoveForwardDelegate() override;
 	virtual FMoveRightSignature* GetMoveRightDelegate() override;
+
 private:
 	FJumpSignature JumpDelegate;
 	FSlideSignature SlideDelegate;

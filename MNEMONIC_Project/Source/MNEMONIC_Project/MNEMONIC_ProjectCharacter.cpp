@@ -44,6 +44,15 @@ AMNEMONIC_ProjectCharacter::AMNEMONIC_ProjectCharacter()
 	Mesh1P->SetRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
 
+	// Setting the player stats
+	m_PlayerStats.m_fMaxHealth = 100.0f;
+	m_PlayerStats.m_fCurrentHealth = 10.f; // m_PlayerStats.m_fMaxHealth;
+	m_PlayerStats.m_fMoveSpeed = 3000.f;
+	m_PlayerStats.m_fNumberofJumps = 3;
+	m_PlayerStats.m_fDashCoolDown = 0.5f;
+	m_PlayerStats.m_fAttackValue = 10.0f;
+	m_PlayerStats.m_fAttackSpeed = 20.0f;
+
 	// Create a gun mesh component
 	/*FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
 	FP_Gun->SetOnlyOwnerSee(false);			// otherwise won't be visible in the multiplayer
@@ -88,7 +97,7 @@ AMNEMONIC_ProjectCharacter::AMNEMONIC_ProjectCharacter()
 	
 	m_pParkour = CreateDefaultSubobject<UParkourMovementComponent>(TEXT("Parkour Component"));
 	m_pParkour->UpdatedComponent = Mesh1P;
-	m_pParkour->MaxSpeed = 3000.f;
+	m_pParkour->MaxSpeed = m_PlayerStats.m_fMoveSpeed;
 
 }
 
@@ -124,6 +133,8 @@ void AMNEMONIC_ProjectCharacter::BeginPlay()
 	}
 
 	StateManager->InitStateManager();
+	
+	
 }
 
 void AMNEMONIC_ProjectCharacter::Tick(float DeltaTime)

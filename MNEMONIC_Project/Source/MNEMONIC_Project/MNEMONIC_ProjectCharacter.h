@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Combat.h"
 #include "Parkour.h"
+#include "Statistics.h"
 #include "StateManagerComponent.h"
 #include "MNEMONIC_ProjectCharacter.generated.h"
 
@@ -57,6 +58,8 @@ protected:
 	virtual void BeginPlay();
 	virtual void Tick(float DeltaTime);
 
+	
+
 public:
 
 	/** Location on gun mesh where projectiles should spawn. */
@@ -99,6 +102,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStateManagerComponent* StateManager;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		FStatistics m_PlayerStats;
 
 	void SetCharacterGravityScale(float scale);
 

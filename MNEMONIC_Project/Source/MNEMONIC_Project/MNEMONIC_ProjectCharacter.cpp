@@ -48,7 +48,7 @@ AMNEMONIC_ProjectCharacter::AMNEMONIC_ProjectCharacter()
 	m_PlayerStats.m_fMaxHealth = 100.0f;
 	m_PlayerStats.m_fCurrentHealth = 10.f; // m_PlayerStats.m_fMaxHealth;
 	m_PlayerStats.m_fMoveSpeed = 3000.f;
-	m_PlayerStats.m_fNumberofJumps = 3;
+	m_PlayerStats.m_fNumberOfJumps = 3;
 	m_PlayerStats.m_fDashCoolDown = 0.5f;
 	m_PlayerStats.m_fAttackValue = 10.0f;
 	m_PlayerStats.m_fAttackSpeed = 20.0f;

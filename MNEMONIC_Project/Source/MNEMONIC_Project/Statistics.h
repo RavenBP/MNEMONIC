@@ -24,7 +24,7 @@ struct FStatistics
 		float m_fMoveSpeed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		int m_fNumberofJumps;
+		int m_fNumberOfJumps;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float m_fDashCoolDown;

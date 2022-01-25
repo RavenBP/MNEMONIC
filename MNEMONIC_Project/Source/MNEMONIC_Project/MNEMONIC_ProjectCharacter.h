@@ -105,7 +105,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		FStatistics m_PlayerStats;
-
+	
+	UFUNCTION(BlueprintCallable, Category = Stats)
+	void UpdatePlayerStats(FStatistics newStats);
+	
 	void SetCharacterGravityScale(float scale);
 
 	void SetCharacterVelocity(FVector velocity);

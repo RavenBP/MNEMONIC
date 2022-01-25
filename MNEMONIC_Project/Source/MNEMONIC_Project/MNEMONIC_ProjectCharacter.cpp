@@ -47,7 +47,7 @@ AMNEMONIC_ProjectCharacter::AMNEMONIC_ProjectCharacter()
 	// Setting the player stats
 	m_PlayerStats.m_fMaxHealth = 100.0f;
 	m_PlayerStats.m_fCurrentHealth = 10.f; // m_PlayerStats.m_fMaxHealth;
-	m_PlayerStats.m_fMoveSpeed = 3000.f;
+	m_PlayerStats.m_fMoveSpeed = 1.0f;
 	m_PlayerStats.m_fNumberOfJumps = 3;
 	m_PlayerStats.m_fDashCoolDown = 0.5f;
 	m_PlayerStats.m_fAttackValue = 10.0f;
@@ -97,7 +97,7 @@ AMNEMONIC_ProjectCharacter::AMNEMONIC_ProjectCharacter()
 	
 	m_pParkour = CreateDefaultSubobject<UParkourMovementComponent>(TEXT("Parkour Component"));
 	m_pParkour->UpdatedComponent = Mesh1P;
-	m_pParkour->MaxSpeed = m_PlayerStats.m_fMoveSpeed;
+	m_pParkour->MaxSpeed = m_PlayerStats.m_fMoveSpeed; //we are not using this at the moment
 
 }
 
@@ -175,6 +175,20 @@ void AMNEMONIC_ProjectCharacter::SetupPlayerInputComponent(class UInputComponent
 	PlayerInputComponent->BindAxis("TurnRate", this, &AMNEMONIC_ProjectCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AMNEMONIC_ProjectCharacter::LookUpAtRate);
+}
+
+void AMNEMONIC_ProjectCharacter::UpdatePlayerStats(FStatistics newStats)
+{
+	
+	m_PlayerStats.m_fMaxHealth += newStats.m_fMaxHealth*m_PlayerStats.m_fMaxHealth*0.01; //the current max health + %max health
+	m_PlayerStats.m_fCurrentHealth += newStats.m_fCurrentHealth*m_PlayerStats.m_fMaxHealth*0.01; //the current health + %max health
+	m_PlayerStats.m_fMoveSpeed = newStats.m_fMoveSpeed; //scale for moveSpeed | start at 1.0f
+	m_PlayerStats.m_fDashCoolDown = newStats.m_fDashCoolDown; //time in seconds.
+	m_PlayerStats.m_fNumberOfJumps = newStats.m_fNumberOfJumps;
+	m_PlayerStats.m_fAttackSpeed += newStats.m_fAttackSpeed;
+	m_PlayerStats.m_fAttackValue += newStats.m_fAttackValue;
+	
+	GetCharacterMovement()->MaxWalkSpeed = m_pParkour->m_fWalkSpeed * m_PlayerStats.m_fMoveSpeed;
 }
 
 void AMNEMONIC_ProjectCharacter::SetCharacterGravityScale(float scale)

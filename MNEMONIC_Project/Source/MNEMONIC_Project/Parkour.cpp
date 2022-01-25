@@ -47,7 +47,7 @@ void UParkourMovementComponent::Update()
 		if(type == PARKOUR_TYPE::HLEFT || type == PARKOUR_TYPE::HRIGHT)
 		{
 			GEngine->AddOnScreenDebugMessage(5, 0.1f, FColor::Green, TEXT("Horizontally climbing."));
-			m_pCharacter->SetActorLocation(m_pCharacter->GetActorLocation() + climbDir * m_fRequiredSpeed * GetWorld()->GetDeltaSeconds());
+			m_pCharacter->SetActorLocation(m_pCharacter->GetActorLocation() + climbDir * m_fRequiredSpeed * m_pCharacter->m_PlayerStats.m_fMoveSpeed * GetWorld()->GetDeltaSeconds());
 		}
 		else if(type == PARKOUR_TYPE::VERTICAL)
 		{
@@ -213,7 +213,7 @@ void UParkourMovementComponent::Dash()
 	if (FTimespan::FromSeconds(GetWorld()->GetTimeSeconds()).GetTotalMilliseconds() >= m_fTimeForEnabledDash)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, TEXT("Dashing!"));
-		m_pCharacter->SetCharacterVelocity(FVector::ZeroVector);
+		//m_pCharacter->SetCharacterVelocity(FVector::ZeroVector);
 		m_pCharacter->GetCharacterMovement()->AddImpulse(m_pCharacter->GetActorForwardVector() * m_fDashForce);
 		m_fTimeForEnabledDash = FTimespan::FromSeconds(GetWorld()->GetTimeSeconds()).GetTotalMilliseconds() + m_fTimeBetweenDashes;
 		m_bCanDash = false; // Will be enabled after landing or jumping off wall run.

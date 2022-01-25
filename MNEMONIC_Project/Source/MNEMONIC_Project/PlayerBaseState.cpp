@@ -37,8 +37,7 @@ void UPlayerBaseState::OnEnterState(AActor* StateOwner)
 void UPlayerBaseState::OnExitState()
 {
 	Super::OnExitState();
-
-	PlayerRef->GetCharacterMovement()->MaxWalkSpeed = PlayerRef->m_pParkour->m_fWalkSpeed;
+	
 	
 	if(PlayerController)
 	{
@@ -65,11 +64,11 @@ void UPlayerBaseState::PressRun(bool value)
 {
 	if(value)
 	{
-		PlayerRef->GetCharacterMovement()->MaxWalkSpeed = PlayerRef->m_pParkour->m_fRunSpeed;
+		PlayerRef->GetCharacterMovement()->MaxWalkSpeed = PlayerRef->m_pParkour->m_fRunSpeed * PlayerRef->m_PlayerStats.m_fMoveSpeed;
 	}
 	else
 	{
-		PlayerRef->GetCharacterMovement()->MaxWalkSpeed = PlayerRef->m_pParkour->m_fWalkSpeed;
+		PlayerRef->GetCharacterMovement()->MaxWalkSpeed = PlayerRef->m_pParkour->m_fWalkSpeed * PlayerRef->m_PlayerStats.m_fMoveSpeed;
 	}
 }
 

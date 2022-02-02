@@ -38,6 +38,10 @@ void AWeaponBase::OnReleasedSecondaryAttack()
 {
 }
 
+void AWeaponBase::OnWeaponAttached()
+{
+}
+
 void AWeaponBase::PlayAnimation(UAnimMontage* montage, USkeletalMeshComponent* skelMesh)
 {
 	if (montage != nullptr)

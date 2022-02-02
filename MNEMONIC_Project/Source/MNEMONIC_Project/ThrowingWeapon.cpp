@@ -33,9 +33,6 @@ void AThrowingWeapon::OnPressedSecondaryAttack()
 	 */
 	if (!m_pMesh->IsSimulatingPhysics())
 	{
-		attachedComponent = GetRootComponent()->GetAttachParent();
-		socketAttachedName = GetRootComponent()->GetAttachSocketName();
-
 		m_pMesh->SetSimulatePhysics(true);
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, "Throwing weapon!");
 		m_pMesh->AddImpulse(firingOrigin->GetForwardVector() * m_fThrowForce, NAME_None, true);

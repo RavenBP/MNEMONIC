@@ -27,4 +27,5 @@ void FCombat::CreateWeapon()
 void FCombat::AttachWeapon(FName SocketName, const FAttachmentTransformRules rules)
 {
 	m_pWeapon->AttachToComponent(m_pCharacter->GetMesh1P(), rules, SocketName);
+	m_pWeapon->OnWeaponAttached();
 }

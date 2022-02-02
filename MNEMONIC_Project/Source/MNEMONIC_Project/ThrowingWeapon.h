@@ -24,6 +24,8 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void PlayAnimation(UAnimMontage* montage, USkeletalMeshComponent* skelMesh) override;
 
+	virtual void OnWeaponAttached() override;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Stats)
 		float m_fRetractSpeed = 5;
 
@@ -40,3 +42,11 @@ private:
 	FVector startPos;
 	FRotator startRot;
 };
+
+inline void AThrowingWeapon::OnWeaponAttached()
+{
+	Super::OnWeaponAttached();
+
+	attachedComponent = GetRootComponent()->GetAttachParent();
+	socketAttachedName = GetRootComponent()->GetAttachSocketName();
+}

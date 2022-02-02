@@ -29,6 +29,8 @@ public:
 	virtual void OnPressedSecondaryAttack();
 	virtual void OnReleasedSecondaryAttack();
 
+	virtual void OnWeaponAttached();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		UAnimMontage* primaryAnimation;
 

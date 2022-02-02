@@ -10,6 +10,13 @@ AEnemy::AEnemy()
 	PrimaryActorTick.bCanEverTick = true;
 
 	healthBar = CreateDefaultSubobject<UWidgetComponent>("Health bar");
+	healthBar->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	healthBar->SetRelativeLocation(FVector::ZeroVector);
+	healthBar->SetWidgetSpace(EWidgetSpace::World);
+	healthBar->SetWorldLocation(FVector(0, 0, 0));
+	healthBar->SetPivot(FVector2D(0.5f, 0.5f));
+	healthBar->SetVisibility(true);
+	healthBar->RegisterComponent();
 
 }
 

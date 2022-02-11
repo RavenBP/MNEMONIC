@@ -23,6 +23,9 @@ public:
 	
 	UPROPERTY(meta = (BindWidget))
 	UProgressBar* HealthBar;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* CorruptionBarLabel;
 	
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* HealthBarLabel;
@@ -42,7 +45,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Corruption Timer")
 	int MaxTimer_Minutes = 3;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Corruption Timer")
 	void UpdateTimer(float deltaTime);
 	int Minutes = 0;
 	int Seconds = 0;

@@ -24,10 +24,9 @@ void UPlayerStatsWidget::UpdateHealth()
 	if (playerStats)
 	{
 		HealthBar->SetPercent(playerStats->m_fCurrentHealth / playerStats->m_fMaxHealth);
-
-		//FNumberFormattingOptions Opts;
-		//Opts.SetMaximumFractionalDigits(0);
-		//HealthBarLabel->SetText(FText::ToString(TEXT("Hello")));
+		FNumberFormattingOptions Opts;
+		Opts.SetMaximumFractionalDigits(0);
+		HealthBarLabel->SetText(FText::AsNumber(playerStats->m_fCurrentHealth, &Opts));
 	}
 }
 
@@ -56,7 +55,7 @@ void UPlayerStatsWidget::UpdateTimer(float deltaTime)
 		{
 			FNumberFormattingOptions Opts;
 			Opts.SetMaximumFractionalDigits(0);
-			HealthBarLabel->SetText(FText::AsNumber(progressBarCounter, &Opts));
+			CorruptionBarLabel->SetText(FText::AsNumber(progressBarCounter, &Opts));
 			CorruptionBar->SetPercent(progressBarCounter / (float)(MaxTimer_Minutes * 60.0f));
 		}
 	}

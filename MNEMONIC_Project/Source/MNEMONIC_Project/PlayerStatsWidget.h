@@ -19,14 +19,18 @@ class MNEMONIC_PROJECT_API UPlayerStatsWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-	
-
 public:
+	
+	UPROPERTY(meta = (BindWidget))
+	UProgressBar* HealthBar;
+	
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* HealthBarLabel;
 	
 	UPROPERTY(meta = (BindWidget))
-	UProgressBar* HealthBar;
+	UProgressBar* CorruptionBar;
+
+public:
 
 	AMNEMONIC_ProjectCharacter* PlayerCharacter;
 
@@ -34,6 +38,16 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateHealth();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Corruption Timer")
+	int MaxTimer_Minutes = 3;
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateTimer(float deltaTime);
+	int Minutes = 0;
+	int Seconds = 0;
+	float counter = 0;
+	float progressBarCounter = 0;
 
 protected:
 	void NativeOnInitialized() override;

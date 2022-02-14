@@ -4,6 +4,7 @@
 #include "PlayerStatsWidget.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
+#include "Kismet/KismetMathLibrary.h"
 
 void UPlayerStatsWidget::NativeOnInitialized()
 {
@@ -13,7 +14,10 @@ void UPlayerStatsWidget::NativeOnInitialized()
 	{
 		playerStats = &(PlayerCharacter->m_PlayerStats);
 	}
-
+	
+	LevelTime = TimeTillStrike * 3;
+	nextStrike = TimeTillStrike;
+	
 	//FTimerHandle TimerHandle;
 	//PlayerCharacter->GetWorldTimerManager().
 	//SetTimer(TimerHandle, this, &UPlayerStatsWidget::UpdateTimer, 1.0f, true, 0.0);
@@ -39,24 +43,33 @@ void UPlayerStatsWidget::UpdateTimer(float deltaTime)
 		{
 			Seconds = 0;
 			Minutes++;
-			if(Minutes >= MaxTimer_Minutes)
+			
+		}
+
+		if((Seconds + Minutes * 60) >= nextStrike)
+		{			
+			if(PlayerCharacter->currentLevelStrikes >= 3)
 			{
-				if(GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("GAME OVER"));
+				//if(GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("GAME OVER"));
+				return;
 			}
+			PlayerCharacter->currentLevelStrikes++;
+			nextStrike += TimeTillStrike;
+			if(GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("NEW STRIKE"));
 		}
 		counter = 0;
 	}
 	else
 	{
 		counter += deltaTime;
-		if(progressBarCounter <= (MaxTimer_Minutes * 60.0f)) progressBarCounter += deltaTime;
+		if(progressBarCounter <= LevelTime) progressBarCounter += deltaTime;
 
 		if(playerStats)
 		{
 			FNumberFormattingOptions Opts;
 			Opts.SetMaximumFractionalDigits(0);
 			CorruptionBarLabel->SetText(FText::AsNumber(progressBarCounter, &Opts));
-			CorruptionBar->SetPercent(progressBarCounter / (float)(MaxTimer_Minutes * 60.0f));
+			CorruptionBar->SetPercent(progressBarCounter / static_cast<float>(LevelTime));
 		}
 	}
 }

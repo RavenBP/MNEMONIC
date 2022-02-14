@@ -105,6 +105,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		FStatistics m_PlayerStats;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gate Strikes")
+	int currentLevelStrikes;
 	
 	UFUNCTION(BlueprintCallable, Category = Stats)
 	void UpdatePlayerStats(FStatistics newStats);

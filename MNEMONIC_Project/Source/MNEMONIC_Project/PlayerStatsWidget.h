@@ -43,7 +43,10 @@ public:
 	void UpdateHealth();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Corruption Timer")
-	int MaxTimer_Minutes = 3;
+	int TimeTillStrike = 60; // in seconds
+
+	int nextStrike;
+	int LevelTime; // in seconds
 
 	UFUNCTION(BlueprintCallable, Category="Corruption Timer")
 	void UpdateTimer(float deltaTime);

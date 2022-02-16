@@ -182,9 +182,9 @@ void AMNEMONIC_ProjectCharacter::UpdatePlayerStats(FStatistics newStats)
 	
 	m_PlayerStats.m_fMaxHealth += newStats.m_fMaxHealth*m_PlayerStats.m_fMaxHealth*0.01; //the current max health + %max health
 	m_PlayerStats.m_fCurrentHealth += newStats.m_fCurrentHealth*m_PlayerStats.m_fMaxHealth*0.01; //the current health + %max health
-	m_PlayerStats.m_fMoveSpeed = newStats.m_fMoveSpeed; //scale for moveSpeed | start at 1.0f
-	m_PlayerStats.m_fDashCoolDown = newStats.m_fDashCoolDown; //time in seconds.
-	m_PlayerStats.m_fNumberOfJumps = newStats.m_fNumberOfJumps;
+	m_PlayerStats.m_fMoveSpeed += newStats.m_fMoveSpeed; //scale for moveSpeed | start at 1.0f
+	m_PlayerStats.m_fDashCoolDown += newStats.m_fDashCoolDown; //time in seconds.
+	m_PlayerStats.m_fNumberOfJumps += newStats.m_fNumberOfJumps;
 	m_PlayerStats.m_fAttackSpeed += newStats.m_fAttackSpeed;
 	m_PlayerStats.m_fAttackValue += newStats.m_fAttackValue;
 	

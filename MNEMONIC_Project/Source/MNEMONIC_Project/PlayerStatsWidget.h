@@ -41,15 +41,15 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateHealth();
+	
+	UFUNCTION(BlueprintCallable, Category = "Corruption Timer")
+    void UpdateTimer();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Corruption Timer")
 	int TimeTillStrike = 60; // in seconds
 
 	int nextStrike;
 	int LevelTime; // in seconds
-
-	UFUNCTION(BlueprintCallable, Category="Corruption Timer")
-	void UpdateTimer(float deltaTime);
 	int Minutes = 0;
 	int Seconds = 0;
 	float counter = 0;

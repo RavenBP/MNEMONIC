@@ -34,7 +34,7 @@ public:
 	UProgressBar* CorruptionBar;
 
 public:
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Corruption Timer")
 	AMNEMONIC_ProjectCharacter* PlayerCharacter;
 
 	FStatistics* playerStats;

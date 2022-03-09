@@ -28,6 +28,16 @@ void AEnemy::AddHealth(float hp)
 		healthEvent.Broadcast(stats.m_fCurrentHealth, hp);
 }
 
+float AEnemy::GetCurrentHealth()
+{
+	return stats.m_fCurrentHealth;
+}
+
+float AEnemy::GetMaxHealth()
+{
+	return stats.m_fMaxHealth;
+}
+
 // Called when the game starts or when spawned
 void AEnemy::BeginPlay()
 {

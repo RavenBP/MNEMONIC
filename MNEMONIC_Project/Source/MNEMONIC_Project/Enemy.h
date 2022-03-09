@@ -31,6 +31,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Stats)
 		void AddHealth(float hp);
 
+	UFUNCTION(BlueprintCallable, Category = Stats)
+		float GetCurrentHealth();
+
+	UFUNCTION(BlueprintCallable, Category = Stats)
+		float GetMaxHealth();
 
 protected:
 	// Called when the game starts or when spawned

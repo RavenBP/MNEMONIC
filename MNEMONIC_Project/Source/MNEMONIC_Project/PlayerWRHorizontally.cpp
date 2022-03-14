@@ -22,7 +22,7 @@ void UPlayerWRHorizontally::TickState()
 void UPlayerWRHorizontally::OnExitState()
 {
 	Super::OnExitState();
-	PlayerRef->SetCharacterGravityScale(1);
+	PlayerRef->ResetCharacterGravity();
 }
 
 void UPlayerWRHorizontally::PressJump()

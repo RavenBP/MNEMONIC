@@ -26,7 +26,7 @@ void UPlayerWRVertically::TickState()
 void UPlayerWRVertically::OnExitState()
 {
 	Super::OnExitState();
-	PlayerRef->SetCharacterGravityScale(1);
+	PlayerRef->ResetCharacterGravity();
 }
 
 void UPlayerWRVertically::PressJump()

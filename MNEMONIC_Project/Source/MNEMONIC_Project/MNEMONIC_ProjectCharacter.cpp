@@ -99,6 +99,8 @@ AMNEMONIC_ProjectCharacter::AMNEMONIC_ProjectCharacter()
 	m_pParkour->UpdatedComponent = Mesh1P;
 	m_pParkour->MaxSpeed = m_PlayerStats.m_fMoveSpeed; //we are not using this at the moment
 
+	m_PlayerStats.m_fGravityScale = 1;
+
 }
 
 void AMNEMONIC_ProjectCharacter::BeginPlay()
@@ -122,6 +124,7 @@ void AMNEMONIC_ProjectCharacter::BeginPlay()
 	}*/
 	
 	m_pParkour->SetCharacter(this);
+	GetCharacterMovement()->GravityScale = m_PlayerStats.m_fGravityScale;
 	GetCharacterMovement()->MaxWalkSpeed = m_pParkour->m_fWalkSpeed;
 	Combat.SetCharacter(this);
 
@@ -195,6 +198,11 @@ void AMNEMONIC_ProjectCharacter::SetCharacterGravityScale(float scale)
 {
 	GetCharacterMovement()->GravityScale = scale;
 	
+}
+
+void AMNEMONIC_ProjectCharacter::ResetCharacterGravity()
+{
+	SetCharacterGravityScale(m_PlayerStats.m_fGravityScale);
 }
 
 void AMNEMONIC_ProjectCharacter::SetCharacterVelocity(FVector velocity)

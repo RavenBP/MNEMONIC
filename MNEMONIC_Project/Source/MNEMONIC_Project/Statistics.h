@@ -34,4 +34,7 @@ struct FStatistics
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float m_fAttackSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float m_fGravityScale;
 };

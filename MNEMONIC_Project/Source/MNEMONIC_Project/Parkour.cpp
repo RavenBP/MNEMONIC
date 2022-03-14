@@ -192,7 +192,7 @@ void UParkourMovementComponent::JumpOffWall()
 		const float lateralJump = m_pClimbable->m_ClimbingStats.m_fLateralJumpForce > 0 ? m_pClimbable->m_ClimbingStats.m_fLateralJumpForce : m_ClimbingStats.m_fLateralJumpForce;
 		const float verticalJump = m_pClimbable->m_ClimbingStats.m_fVerticalJumpForce > 0 ? m_pClimbable->m_ClimbingStats.m_fVerticalJumpForce : m_ClimbingStats.m_fVerticalJumpForce;
 		//GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, FString::Printf(TEXT("Wall normal: %s"), *wallNormal.ToString()));
-		m_pCharacter->SetCharacterGravityScale(1);
+		m_pCharacter->ResetCharacterGravity();
 		if(type == PARKOUR_TYPE::VERTICAL)
 		{
 			const float backwardJump = m_pClimbable->m_ClimbingStats.m_fBackwardJumpForce > 0 ? m_pClimbable->m_ClimbingStats.m_fBackwardJumpForce : m_ClimbingStats.m_fBackwardJumpForce;

@@ -114,6 +114,8 @@ public:
 	
 	void SetCharacterGravityScale(float scale);
 
+	void ResetCharacterGravity();
+
 	void SetCharacterVelocity(FVector velocity);
 
 

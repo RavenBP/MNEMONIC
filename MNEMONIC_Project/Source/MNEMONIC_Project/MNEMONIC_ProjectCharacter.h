@@ -111,6 +111,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = Stats)
 	void UpdatePlayerStats(FStatistics newStats);
+
+	UFUNCTION(BlueprintCallable, Category = Stats)
+	void AddToCurrentHealth(float healthToAdd);
 	
 	void SetCharacterGravityScale(float scale);
 

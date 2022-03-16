@@ -194,6 +194,12 @@ void AMNEMONIC_ProjectCharacter::UpdatePlayerStats(FStatistics newStats)
 	GetCharacterMovement()->MaxWalkSpeed = m_pParkour->m_fWalkSpeed * m_PlayerStats.m_fMoveSpeed;
 }
 
+void AMNEMONIC_ProjectCharacter::AddToCurrentHealth(float healthToAdd)
+{
+	m_PlayerStats.m_fCurrentHealth += healthToAdd;
+}
+
+
 void AMNEMONIC_ProjectCharacter::SetCharacterGravityScale(float scale)
 {
 	GetCharacterMovement()->GravityScale = scale;

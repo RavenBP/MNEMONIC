@@ -21,4 +21,6 @@ protected:
 	virtual void TickState() override;
 	virtual void PressMoveForward(float value) override;
 	virtual void PressMoveRight(float value) override;
+	virtual void PressPrimaryWeapon(bool value) override;
+	virtual void PressSecondaryWeapon(bool value) override;
 };

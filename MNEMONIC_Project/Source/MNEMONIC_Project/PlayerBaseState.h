@@ -20,7 +20,7 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	AMNEMONIC_ProjectCharacter* PlayerRef = nullptr;
 	ICustomPlayerControllerInterface* PlayerController = nullptr;
-
+	bool isRunning = false;
 	virtual void OnEnterState(AActor* StateOwner) override;
 	virtual void OnExitState() override;
 

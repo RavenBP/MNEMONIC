@@ -64,10 +64,12 @@ void UPlayerBaseState::PressRun(bool value)
 {
 	if(value)
 	{
+		isRunning = true;
 		PlayerRef->GetCharacterMovement()->MaxWalkSpeed = PlayerRef->m_pParkour->m_fRunSpeed * PlayerRef->m_PlayerStats.m_fMoveSpeed;
 	}
 	else
 	{
+		isRunning = false;
 		PlayerRef->GetCharacterMovement()->MaxWalkSpeed = PlayerRef->m_pParkour->m_fWalkSpeed * PlayerRef->m_PlayerStats.m_fMoveSpeed;
 	}
 }

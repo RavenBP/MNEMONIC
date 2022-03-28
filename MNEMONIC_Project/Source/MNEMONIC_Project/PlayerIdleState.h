@@ -15,6 +15,7 @@ class MNEMONIC_PROJECT_API UPlayerIdleState : public UPlayerBaseState
 	GENERATED_BODY()
 
 protected:
+	virtual void OnEnterState(AActor* StateOwner) override;
 	virtual void PressJump() override;
 	virtual void TickState() override;
 	virtual void PressMoveForward(float value) override;

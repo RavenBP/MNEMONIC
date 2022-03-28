@@ -190,7 +190,8 @@ void AMNEMONIC_ProjectCharacter::UpdatePlayerStats(FStatistics newStats)
 	m_PlayerStats.m_fNumberOfJumps += newStats.m_fNumberOfJumps;
 	m_PlayerStats.m_fAttackSpeed += newStats.m_fAttackSpeed;
 	m_PlayerStats.m_fAttackValue += newStats.m_fAttackValue;
-	
+
+	m_pParkour->m_fTimeBetweenDashes = m_PlayerStats.m_fDashCoolDown;
 	GetCharacterMovement()->MaxWalkSpeed = m_pParkour->m_fWalkSpeed * m_PlayerStats.m_fMoveSpeed;
 }
 

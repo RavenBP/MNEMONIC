@@ -48,3 +48,15 @@ void UPlayerRunningState::PressMoveRight(float Value)
 {
 	Super::PressMoveRight(Value);
 }
+
+void UPlayerRunningState::PressPrimaryWeapon(bool bValue)
+{
+	if(isRunning) return;
+	Super::PressPrimaryWeapon(bValue);
+}
+
+void UPlayerRunningState::PressSecondaryWeapon(bool bValue)
+{
+	if(isRunning) return;
+	Super::PressSecondaryWeapon(bValue);
+}

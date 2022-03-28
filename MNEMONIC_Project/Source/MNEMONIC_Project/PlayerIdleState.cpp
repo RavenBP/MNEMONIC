@@ -5,6 +5,12 @@
 
 #include "GameFramework/CharacterMovementComponent.h"
 
+void UPlayerIdleState::OnEnterState(AActor* StateOwner)
+{
+	Super::OnEnterState(StateOwner);
+	PlayerRef->GetCharacterMovement()->MaxWalkSpeed =PlayerRef->m_pParkour->m_fWalkSpeed * PlayerRef->m_PlayerStats.m_fMoveSpeed;
+}
+
 void UPlayerIdleState::PressJump()
 {
 	Super::PressJump();

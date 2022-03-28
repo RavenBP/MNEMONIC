@@ -216,7 +216,7 @@ void UParkourMovementComponent::Dash()
 		//m_pCharacter->SetCharacterVelocity(FVector::ZeroVector);
 		m_pCharacter->GetCharacterMovement()->AddImpulse(m_pCharacter->GetActorForwardVector() * m_fDashForce);
 		m_fTimeForEnabledDash = FTimespan::FromSeconds(GetWorld()->GetTimeSeconds()).GetTotalMilliseconds() + m_fTimeBetweenDashes;
-		m_bCanDash = false; // Will be enabled after landing or jumping off wall run.
+		//m_bCanDash = false; // Will be enabled after landing or jumping off wall run.
 		OnDashed.Broadcast();
 	}
 }

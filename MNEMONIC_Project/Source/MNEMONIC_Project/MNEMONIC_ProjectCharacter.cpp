@@ -46,7 +46,7 @@ AMNEMONIC_ProjectCharacter::AMNEMONIC_ProjectCharacter()
 
 	// Setting the player stats
 	m_PlayerStats.m_fMaxHealth = 100.0f;
-	m_PlayerStats.m_fCurrentHealth = 10.f; // m_PlayerStats.m_fMaxHealth;
+	m_PlayerStats.m_fCurrentHealth = m_PlayerStats.m_fMaxHealth;
 	m_PlayerStats.m_fMoveSpeed = 1.0f;
 	m_PlayerStats.m_fNumberOfJumps = 3;
 	m_PlayerStats.m_fDashCoolDown = 0.5f;

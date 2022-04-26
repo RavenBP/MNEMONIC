@@ -62,16 +62,20 @@ void UPlayerBaseState::PressSlide()
 
 void UPlayerBaseState::PressRun(bool value)
 {
-	if(value)
-	{
-		isRunning = true;
-		PlayerRef->GetCharacterMovement()->MaxWalkSpeed = PlayerRef->m_pParkour->m_fRunSpeed * PlayerRef->m_PlayerStats.m_fMoveSpeed;
-	}
-	else
-	{
-		isRunning = false;
-		PlayerRef->GetCharacterMovement()->MaxWalkSpeed = PlayerRef->m_pParkour->m_fWalkSpeed * PlayerRef->m_PlayerStats.m_fMoveSpeed;
-	}
+	///Commenting this stuff out for now since we are going to remove sprint...
+
+	//if(value)
+	//{
+	//	isRunning = true;
+	//	PlayerRef->GetCharacterMovement()->MaxWalkSpeed = PlayerRef->m_pParkour->m_fRunSpeed * PlayerRef->m_PlayerStats.m_fMoveSpeed;
+	//}
+	//else
+	//{
+	//	isRunning = false;
+	//	PlayerRef->GetCharacterMovement()->MaxWalkSpeed = PlayerRef->m_pParkour->m_fWalkSpeed * PlayerRef->m_PlayerStats.m_fMoveSpeed;
+	//}
+
+	//GEngine->AddOnScreenDebugMessage(5, 0.1f, FColor::Green, FString::Printf(TEXT("value = %f"), PlayerRef->GetCharacterMovement()->MaxWalkSpeed = PlayerRef->m_pParkour->m_fRunSpeed * PlayerRef->m_PlayerStats.m_fMoveSpeed));
 }
 
 void UPlayerBaseState::PressMoveForward(float value)

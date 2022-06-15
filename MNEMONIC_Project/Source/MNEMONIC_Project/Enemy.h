@@ -21,7 +21,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Stats)
 		FStatistics stats;
-
+	
 	UPROPERTY(BlueprintAssignable, EditAnywhere, Category = Stats)
 		FOnHealthEvent healthEvent;
 
@@ -36,6 +36,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Stats)
 		float GetMaxHealth();
+
+	
 
 protected:
 	// Called when the game starts or when spawned

@@ -17,6 +17,7 @@ AEnemy::AEnemy()
 	//healthBar->SetPivot(FVector2D(0.5f, 0.5f));
 	//healthBar->SetVisibility(true);
 	//healthBar->RegisterComponent();
+	
 
 }
 
@@ -51,6 +52,8 @@ void AEnemy::BeginPlay()
 	healthBar->SetPivot(FVector2D(0.5f, 0.5f));
 	healthBar->SetVisibility(true);
 	healthBar->RegisterComponent();
+
+	
 
 }
 

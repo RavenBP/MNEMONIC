@@ -46,3 +46,4 @@ void UPlayerIdleState::PressMoveRight(float Value)
 	}
 	
 }
+

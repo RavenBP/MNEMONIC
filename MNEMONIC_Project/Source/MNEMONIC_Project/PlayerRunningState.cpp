@@ -19,9 +19,9 @@ void UPlayerRunningState::PressJump()
 	PlayerRef->Jump();
 }
 
-void UPlayerRunningState::PressSlide()
+void UPlayerRunningState::PressSlide_Implementation()
 {
-	Super::PressSlide();
+	Super::PressSlide_Implementation();
 
 	PlayerRef->StateManager->PushStateByKey("Slide");
 }
@@ -47,12 +47,6 @@ void UPlayerRunningState::PressMoveForward(float Value)
 void UPlayerRunningState::PressMoveRight(float Value)
 {
 	Super::PressMoveRight(Value);
-}
-
-void UPlayerRunningState::PressPrimaryWeapon(bool bValue)
-{
-	if(isRunning) return;
-	Super::PressPrimaryWeapon(bValue);
 }
 
 void UPlayerRunningState::PressSecondaryWeapon(bool bValue)

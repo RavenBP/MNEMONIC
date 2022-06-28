@@ -55,9 +55,8 @@ void UPlayerBaseState::PressJump()
 {
 }
 
-void UPlayerBaseState::PressSlide()
+void UPlayerBaseState::PressSlide_Implementation()
 {
-	
 }
 
 void UPlayerBaseState::PressRun(bool value)
@@ -98,7 +97,7 @@ void UPlayerBaseState::PressMoveRight(float value)
 	}
 }
 
-void UPlayerBaseState::PressPrimaryWeapon(bool value)
+void UPlayerBaseState::PressPrimaryWeapon_Implementation(bool value)
 {
 	if (value == true) //pressed
 	{

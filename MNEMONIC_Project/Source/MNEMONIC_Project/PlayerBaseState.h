@@ -26,11 +26,19 @@ public:
 
 protected:
 	virtual void PressJump();
-	virtual void PressSlide();
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void PressSlide();
+	virtual void PressSlide_Implementation();
+	
 	virtual void PressRun(bool value);
 	virtual void PressMoveForward(float value);
 	virtual void PressMoveRight(float value);
-	virtual void PressPrimaryWeapon(bool value);
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void PressPrimaryWeapon(bool value);
+	virtual void PressPrimaryWeapon_Implementation(bool value);
+	
 	virtual void PressSecondaryWeapon(bool value);
 	
 };

@@ -17,10 +17,9 @@ class MNEMONIC_PROJECT_API UPlayerRunningState : public UPlayerBaseState
 protected:
 	virtual void OnEnterState(AActor* StateOwner) override;
 	virtual void PressJump() override;
-	virtual void PressSlide() override;
+	virtual void PressSlide_Implementation() override;
 	virtual void TickState() override;
 	virtual void PressMoveForward(float value) override;
 	virtual void PressMoveRight(float value) override;
-	virtual void PressPrimaryWeapon(bool value) override;
 	virtual void PressSecondaryWeapon(bool value) override;
 };

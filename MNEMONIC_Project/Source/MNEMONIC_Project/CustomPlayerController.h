@@ -28,6 +28,10 @@ protected:
 	void ReleaseSecondaryFire();
 	void PressMoveForward(float value);
 	void PressMoveRight(float value);
+	void PressTurn(float value);
+	void PressTurnRate(float value);
+	void PressLookUp(float value);
+	void PressLookUpRate(float value);
 	virtual FJumpSignature* GetJumpDelegate() override;
 	virtual FSlideSignature* GetSlideDelegate() override;
 	virtual FRunSignature* GetRunDelegate() override;
@@ -35,7 +39,11 @@ protected:
 	virtual FSecondaryWeaponSignature* GetSecondaryWeaponDelegate() override;
 	virtual FMoveForwardSignature* GetMoveForwardDelegate() override;
 	virtual FMoveRightSignature* GetMoveRightDelegate() override;
-
+	virtual FTurnSignature* GetTurnDelegate() override;
+	virtual FTurnRateSignature* GetTurnRateDelegate() override;
+	virtual FLookUpSignature* GetLookUpDelegate() override;
+	virtual FLookUpRateSignature* GetLookUpRateDelegate() override;
+	
 private:
 	FJumpSignature JumpDelegate;
 	FSlideSignature SlideDelegate;
@@ -44,5 +52,9 @@ private:
 	FSecondaryWeaponSignature SecondaryWeaponDelegate;
 	FMoveForwardSignature MoveForwardDelegate;
 	FMoveRightSignature MoveRightDelegate;
+	FTurnSignature TurnDelegate;
+	FTurnRateSignature TurnRateDelegate;
+	FLookUpSignature LookUpDelegate;
+	FLookUpRateSignature LookUpRateDelegate;
 };
 

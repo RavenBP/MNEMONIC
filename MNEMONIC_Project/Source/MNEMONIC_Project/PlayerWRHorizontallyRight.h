@@ -13,6 +13,6 @@ UCLASS()
 class MNEMONIC_PROJECT_API UPlayerWRHorizontallyRight : public UPlayerWRHorizontally
 {
 	GENERATED_BODY()
-	virtual void TickState() override;
+	virtual void TickState_Implementation() override;
 	
 };

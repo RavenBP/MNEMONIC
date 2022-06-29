@@ -5,22 +5,22 @@
 
 #include "GameFramework/CharacterMovementComponent.h"
 
-void UPlayerInAirState::PressJump()
+void UPlayerInAirState::PressJump_Implementation()
 {
-	Super::PressJump();
+	Super::PressJump_Implementation();
 }
 
-void UPlayerInAirState::PressRun(bool value)
+void UPlayerInAirState::PressRun_Implementation(bool value)
 {
-	Super::PressRun(value);
+	Super::PressRun_Implementation(value);
 
 	if(value)
 		PlayerRef->m_pParkour->Dash();
 }
 
-void UPlayerInAirState::TickState()
+void UPlayerInAirState::TickState_Implementation()
 {
-	Super::TickState();
+	Super::TickState_Implementation();
 	if(PlayerRef->GetCharacterMovement()->IsMovingOnGround())
 	{
 		PlayerRef->StateManager->PopState();

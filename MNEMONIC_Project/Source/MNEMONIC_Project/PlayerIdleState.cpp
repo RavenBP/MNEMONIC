@@ -5,22 +5,22 @@
 
 #include "GameFramework/CharacterMovementComponent.h"
 
-void UPlayerIdleState::OnEnterState(AActor* StateOwner)
+void UPlayerIdleState::OnEnterState_Implementation(AActor* StateOwner)
 {
-	Super::OnEnterState(StateOwner);
+	Super::OnEnterState_Implementation(StateOwner);
 	PlayerRef->GetCharacterMovement()->MaxWalkSpeed =PlayerRef->m_pParkour->m_fWalkSpeed * PlayerRef->m_PlayerStats.m_fMoveSpeed;
 }
 
-void UPlayerIdleState::PressJump()
+void UPlayerIdleState::PressJump_Implementation()
 {
-	Super::PressJump();
+	Super::PressJump_Implementation();
 
 	PlayerRef->Jump();
 }
 
-void UPlayerIdleState::TickState()
+void UPlayerIdleState::TickState_Implementation()
 {
-	Super::TickState();
+	Super::TickState_Implementation();
 	//if is not moving on the ground
 	if(!PlayerRef->GetCharacterMovement()->IsMovingOnGround())
 	{
@@ -28,18 +28,18 @@ void UPlayerIdleState::TickState()
 	}
 }
 
-void UPlayerIdleState::PressMoveForward(float Value)
+void UPlayerIdleState::PressMoveForward_Implementation(float Value)
 {
-	Super::PressMoveForward(Value);
+	Super::PressMoveForward_Implementation(Value);
 	if(Value != 0.0f)
 	{
 		PlayerRef->StateManager->PushStateByKey("Running");
 	}
 }
 
-void UPlayerIdleState::PressMoveRight(float Value)
+void UPlayerIdleState::PressMoveRight_Implementation(float Value)
 {
-	Super::PressMoveRight(Value);
+	Super::PressMoveRight_Implementation(Value);
 	if(Value != 0.0f)
 	{
 		PlayerRef->StateManager->PushStateByKey("Running");

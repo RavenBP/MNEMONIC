@@ -3,9 +3,9 @@
 
 #include "PlayerWRHorizontallyRight.h"
 
-void UPlayerWRHorizontallyRight::TickState()
+void UPlayerWRHorizontallyRight::TickState_Implementation()
 {
-	Super::TickState();
+	Super::TickState_Implementation();
 	
 	if(PlayerRef->m_pParkour->GetParkourType() != PARKOUR_TYPE::HRIGHT)
 	{

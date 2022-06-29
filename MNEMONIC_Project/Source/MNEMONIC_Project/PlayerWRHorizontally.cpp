@@ -5,28 +5,28 @@
 
 #include "GameFramework/CharacterMovementComponent.h"
 
-void UPlayerWRHorizontally::OnEnterState(AActor* StateOwner)
+void UPlayerWRHorizontally::OnEnterState_Implementation(AActor* StateOwner)
 {
-	Super::OnEnterState(StateOwner);
+	Super::OnEnterState_Implementation(StateOwner);
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, "Enter Horizontal State");
 	PlayerRef->SetCharacterGravityScale(PlayerRef->m_pParkour->GetRequiredGravity());
 	PlayerRef->SetCharacterVelocity(FVector::ZeroVector);
 }
 
-void UPlayerWRHorizontally::TickState()
+void UPlayerWRHorizontally::TickState_Implementation()
 {
-	Super::TickState();
+	Super::TickState_Implementation();
 	PlayerRef->m_pParkour->Update();
 }
 
-void UPlayerWRHorizontally::OnExitState()
+void UPlayerWRHorizontally::OnExitState_Implementation()
 {
-	Super::OnExitState();
+	Super::OnExitState_Implementation();
 	PlayerRef->ResetCharacterGravity();
 }
 
-void UPlayerWRHorizontally::PressJump()
+void UPlayerWRHorizontally::PressJump_Implementation()
 {
-	Super::PressJump();
+	Super::PressJump_Implementation();
 	PlayerRef->m_pParkour->JumpOffWall();
 }

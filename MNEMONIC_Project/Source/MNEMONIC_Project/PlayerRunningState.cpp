@@ -5,16 +5,16 @@
 
 #include "GameFramework/CharacterMovementComponent.h"
 
-void UPlayerRunningState::OnEnterState(AActor* StateOwner)
+void UPlayerRunningState::OnEnterState_Implementation(AActor* StateOwner)
 {
-	Super::OnEnterState(StateOwner);
+	Super::OnEnterState_Implementation(StateOwner);
 
 	PlayerRef->m_pParkour->SetCanDash();
 }
 
-void UPlayerRunningState::PressJump()
+void UPlayerRunningState::PressJump_Implementation()
 {
-	Super::PressJump();
+	Super::PressJump_Implementation();
 
 	PlayerRef->Jump();
 }
@@ -26,9 +26,9 @@ void UPlayerRunningState::PressSlide_Implementation()
 	PlayerRef->StateManager->PushStateByKey("Slide");
 }
 
-void UPlayerRunningState::TickState()
+void UPlayerRunningState::TickState_Implementation()
 {
-	Super::TickState();
+	Super::TickState_Implementation();
 	if(PlayerRef->GetCharacterMovement()->Velocity.IsZero())
 	{
 		PlayerRef->StateManager->PopState();
@@ -39,18 +39,18 @@ void UPlayerRunningState::TickState()
 	}
 }
 
-void UPlayerRunningState::PressMoveForward(float Value)
+void UPlayerRunningState::PressMoveForward_Implementation(float Value)
 {
-	Super::PressMoveForward(Value);
+	Super::PressMoveForward_Implementation(Value);
 }
 
-void UPlayerRunningState::PressMoveRight(float Value)
+void UPlayerRunningState::PressMoveRight_Implementation(float Value)
 {
-	Super::PressMoveRight(Value);
+	Super::PressMoveRight_Implementation(Value);
 }
 
-void UPlayerRunningState::PressSecondaryWeapon(bool bValue)
+void UPlayerRunningState::PressSecondaryWeapon_Implementation(bool bValue)
 {
 	if(isRunning) return;
-	Super::PressSecondaryWeapon(bValue);
+	Super::PressSecondaryWeapon_Implementation(bValue);
 }

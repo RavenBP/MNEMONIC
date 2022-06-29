@@ -17,6 +17,10 @@ void ACustomPlayerController::SetupInputComponent()
 	InputComponent->BindAction("SecondaryFire", EInputEvent::IE_Released, this, &ACustomPlayerController::ReleaseSecondaryFire);
 	InputComponent->BindAxis("MoveForward", this, &ACustomPlayerController::PressMoveForward);
 	InputComponent->BindAxis("MoveRight", this, &ACustomPlayerController::PressMoveRight);
+	InputComponent->BindAxis("Turn", this, &ACustomPlayerController::PressTurn);
+	InputComponent->BindAxis("TurnRate", this, &ACustomPlayerController::PressTurnRate);
+	InputComponent->BindAxis("LookUp", this, &ACustomPlayerController::PressLookUp);
+	InputComponent->BindAxis("LookUpRate", this, &ACustomPlayerController::PressLookUpRate);
 	
 }
 
@@ -101,6 +105,38 @@ void ACustomPlayerController::PressMoveRight(float value)
 	}
 }
 
+void ACustomPlayerController::PressTurn(float value)
+{
+	if(TurnDelegate.IsBound())
+	{
+		TurnDelegate.Broadcast(value);
+	}
+}
+
+void ACustomPlayerController::PressTurnRate(float value)
+{
+	if(TurnRateDelegate.IsBound())
+	{
+		TurnRateDelegate.Broadcast(value);
+	}
+}
+
+void ACustomPlayerController::PressLookUp(float value)
+{
+	if(LookUpDelegate.IsBound())
+	{
+		LookUpDelegate.Broadcast(value);
+	}
+}
+
+void ACustomPlayerController::PressLookUpRate(float value)
+{
+	if(LookUpRateDelegate.IsBound())
+	{
+		LookUpRateDelegate.Broadcast(value);
+	}
+}
+
 FJumpSignature* ACustomPlayerController::GetJumpDelegate()
 {
 	return &JumpDelegate;
@@ -135,4 +171,24 @@ FMoveForwardSignature* ACustomPlayerController::GetMoveForwardDelegate()
 FMoveRightSignature* ACustomPlayerController::GetMoveRightDelegate()
 {
 	return &MoveRightDelegate;
+}
+
+FTurnSignature* ACustomPlayerController::GetTurnDelegate()
+{
+	return &TurnDelegate;
+}
+
+FTurnRateSignature* ACustomPlayerController::GetTurnRateDelegate()
+{
+	return &TurnRateDelegate;
+}
+
+FLookUpSignature* ACustomPlayerController::GetLookUpDelegate()
+{
+	return &LookUpDelegate;
+}
+
+FLookUpRateSignature* ACustomPlayerController::GetLookUpRateDelegate()
+{
+	return &LookUpRateDelegate;
 }

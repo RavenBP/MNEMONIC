@@ -5,17 +5,17 @@
 
 #include "GameFramework/CharacterMovementComponent.h"
 
-void UPlayerWRVertically::OnEnterState(AActor* StateOwner)
+void UPlayerWRVertically::OnEnterState_Implementation(AActor* StateOwner)
 {
-	Super::OnEnterState(StateOwner);
+	Super::OnEnterState_Implementation(StateOwner);
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, "Enter Vertical State");
 	PlayerRef->SetCharacterGravityScale(PlayerRef->m_pParkour->GetRequiredGravity());
 	PlayerRef->SetCharacterVelocity(FVector::ZeroVector);
 }
 
-void UPlayerWRVertically::TickState()
+void UPlayerWRVertically::TickState_Implementation()
 {
-	Super::TickState();
+	Super::TickState_Implementation();
 	if(PlayerRef->m_pParkour->GetParkourType() != PARKOUR_TYPE::VERTICAL)
 	{
 		PlayerRef->StateManager->PopState();
@@ -23,14 +23,14 @@ void UPlayerWRVertically::TickState()
 	PlayerRef->m_pParkour->Update();
 }
 
-void UPlayerWRVertically::OnExitState()
+void UPlayerWRVertically::OnExitState_Implementation()
 {
-	Super::OnExitState();
+	Super::OnExitState_Implementation();
 	PlayerRef->ResetCharacterGravity();
 }
 
-void UPlayerWRVertically::PressJump()
+void UPlayerWRVertically::PressJump_Implementation()
 {
-	Super::PressJump();
+	Super::PressJump_Implementation();
 	PlayerRef->m_pParkour->JumpOffWall();
 }

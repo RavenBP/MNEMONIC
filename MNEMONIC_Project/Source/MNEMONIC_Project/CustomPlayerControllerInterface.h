@@ -14,6 +14,10 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FPrimaryWeaponSignature, bool);
 DECLARE_MULTICAST_DELEGATE_OneParam(FSecondaryWeaponSignature, bool);
 DECLARE_MULTICAST_DELEGATE_OneParam(FMoveForwardSignature, float);
 DECLARE_MULTICAST_DELEGATE_OneParam(FMoveRightSignature, float);
+DECLARE_MULTICAST_DELEGATE_OneParam(FTurnSignature, float);
+DECLARE_MULTICAST_DELEGATE_OneParam(FTurnRateSignature, float);
+DECLARE_MULTICAST_DELEGATE_OneParam(FLookUpSignature, float);
+DECLARE_MULTICAST_DELEGATE_OneParam(FLookUpRateSignature, float);
 DECLARE_MULTICAST_DELEGATE_OneParam(FRunSignature, bool);
 
 UINTERFACE(MinimalAPI)
@@ -39,4 +43,8 @@ public:
 	virtual FSecondaryWeaponSignature* GetSecondaryWeaponDelegate() = 0;
 	virtual FMoveForwardSignature* GetMoveForwardDelegate() = 0;
 	virtual FMoveRightSignature* GetMoveRightDelegate() = 0;
+	virtual FTurnSignature* GetTurnDelegate() = 0;
+	virtual FTurnRateSignature* GetTurnRateDelegate() = 0;
+	virtual FLookUpSignature* GetLookUpDelegate() = 0;
+	virtual FLookUpRateSignature* GetLookUpRateDelegate() = 0;
 };

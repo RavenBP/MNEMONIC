@@ -29,9 +29,17 @@ public:
 		
 
 public:
-	virtual void OnEnterState(AActor* StateOwner);
-	virtual void TickState();
-	virtual void OnExitState();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void OnEnterState(AActor* StateOwner);
+	virtual void OnEnterState_Implementation(AActor* StateOwner);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void TickState();
+	virtual void TickState_Implementation();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void OnExitState();
+	virtual void OnExitState_Implementation();
 protected:
 
 };

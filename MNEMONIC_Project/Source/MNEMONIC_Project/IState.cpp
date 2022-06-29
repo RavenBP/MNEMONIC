@@ -2,14 +2,16 @@
 #include "MNEMONIC_ProjectCharacter.h"
 
 
-void UIState::OnEnterState(AActor* StateOwner)
+void UIState::OnEnterState_Implementation(AActor* StateOwner)
 {
 }
 
-void UIState::TickState()
+
+void UIState::TickState_Implementation()
 {
 }
 
-void UIState::OnExitState()
+
+void UIState::OnExitState_Implementation()
 {
 }

@@ -7,9 +7,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
-void UPlayerBaseState::OnEnterState(AActor* StateOwner)
+void UPlayerBaseState::OnEnterState_Implementation(AActor* StateOwner)
 {
-	Super::OnEnterState(StateOwner);
+	Super::OnEnterState_Implementation(StateOwner);
 
 	//Save player ref for later
 	if(!PlayerRef)
@@ -31,12 +31,16 @@ void UPlayerBaseState::OnEnterState(AActor* StateOwner)
 		PlayerController->GetSecondaryWeaponDelegate()->AddUObject(this, &UPlayerBaseState::PressSecondaryWeapon);
 		PlayerController->GetMoveForwardDelegate()->AddUObject(this, &UPlayerBaseState::PressMoveForward);
 		PlayerController->GetMoveRightDelegate()->AddUObject(this, &UPlayerBaseState::PressMoveRight);
+		PlayerController->GetTurnDelegate()->AddUObject(this, &UPlayerBaseState::PressTurn);
+		PlayerController->GetTurnRateDelegate()->AddUObject(this, &UPlayerBaseState::PressTurnRate);
+		PlayerController->GetLookUpDelegate()->AddUObject(this, &UPlayerBaseState::PressLookUp);
+		PlayerController->GetLookUpRateDelegate()->AddUObject(this, &UPlayerBaseState::PressLookUpRate);
 	}
 }
 
-void UPlayerBaseState::OnExitState()
+void UPlayerBaseState::OnExitState_Implementation()
 {
-	Super::OnExitState();
+	Super::OnExitState_Implementation();
 	
 	
 	if(PlayerController)
@@ -48,10 +52,14 @@ void UPlayerBaseState::OnExitState()
 		PlayerController->GetMoveRightDelegate()->RemoveAll(this);
 		PlayerController->GetPrimaryWeaponDelegate()->RemoveAll(this);
 		PlayerController->GetSecondaryWeaponDelegate()->RemoveAll(this);
+		PlayerController->GetTurnDelegate()->RemoveAll(this);
+		PlayerController->GetTurnRateDelegate()->RemoveAll(this);
+		PlayerController->GetLookUpDelegate()->RemoveAll(this);
+		PlayerController->GetLookUpRateDelegate()->RemoveAll(this);
 	}
 }
 
-void UPlayerBaseState::PressJump()
+void UPlayerBaseState::PressJump_Implementation()
 {
 }
 
@@ -59,7 +67,7 @@ void UPlayerBaseState::PressSlide_Implementation()
 {
 }
 
-void UPlayerBaseState::PressRun(bool value)
+void UPlayerBaseState::PressRun_Implementation(bool value)
 {
 	///Commenting this stuff out for now since we are going to remove sprint...
 
@@ -77,7 +85,8 @@ void UPlayerBaseState::PressRun(bool value)
 	//GEngine->AddOnScreenDebugMessage(5, 0.1f, FColor::Green, FString::Printf(TEXT("value = %f"), PlayerRef->GetCharacterMovement()->MaxWalkSpeed = PlayerRef->m_pParkour->m_fRunSpeed * PlayerRef->m_PlayerStats.m_fMoveSpeed));
 }
 
-void UPlayerBaseState::PressMoveForward(float value)
+
+void UPlayerBaseState::PressMoveForward_Implementation(float value)
 {
 	if(value != 0.0f)
 	{
@@ -88,7 +97,7 @@ void UPlayerBaseState::PressMoveForward(float value)
 	}
 }
 
-void UPlayerBaseState::PressMoveRight(float value)
+void UPlayerBaseState::PressMoveRight_Implementation(float value)
 {
 	if (value != 0.0f)
 	{
@@ -116,21 +125,50 @@ void UPlayerBaseState::PressPrimaryWeapon_Implementation(bool value)
 	}
 }
 
-void UPlayerBaseState::PressSecondaryWeapon(bool value)
+void UPlayerBaseState::PressSecondaryWeapon_Implementation(bool value)
 {
 	if(value == true) //pressed
-	{
+		{
 		if (PlayerRef->Combat.m_pWeapon)
 		{
 			PlayerRef->Combat.m_pWeapon->OnPressedSecondaryAttack();
 			PlayerRef->Combat.m_pWeapon->PlayAnimation(PlayerRef->Combat.m_pWeapon->secondaryAnimation, PlayerRef->GetMesh1P());
 		}
-	}
+		}
 	else //released
-	{
+		{
 		if (PlayerRef->Combat.m_pWeapon)
 		{
 			PlayerRef->Combat.m_pWeapon->OnReleasedSecondaryAttack();
 		}
+		}
+}
+
+void UPlayerBaseState::PressTurn_Implementation(float value)
+{
+	if(value != 0.0f)
+	{
+		PlayerRef->AddControllerYawInput(value);
 	}
+}
+
+void UPlayerBaseState::PressTurnRate_Implementation(float value)
+{
+	if(value == 0.0f) return;
+	// calculate delta for this frame from the rate information
+	PlayerRef->AddControllerYawInput(value * PlayerRef->BaseTurnRate
+		* GetWorld()->GetDeltaSeconds());
+}
+
+void UPlayerBaseState::PressLookUp_Implementation(float value)
+{
+	if(value == 0.0f) return;
+	PlayerRef->AddControllerPitchInput(value);
+}
+
+void UPlayerBaseState::PressLookUpRate_Implementation(float value)
+{
+	if(value == 0.0f) return;
+	PlayerRef->AddControllerPitchInput(value * PlayerRef->BaseLookUpRate
+		* GetWorld()->GetDeltaSeconds());
 }

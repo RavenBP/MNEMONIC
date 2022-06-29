@@ -13,8 +13,8 @@ UCLASS()
 class MNEMONIC_PROJECT_API UPlayerWRVertically : public UPlayerBaseState
 {
 	GENERATED_BODY()
-	virtual void OnEnterState(AActor* StateOwner) override;
-	virtual void TickState() override;
-	virtual void OnExitState() override;
-	virtual void PressJump() override;
+	virtual void OnEnterState_Implementation(AActor* StateOwner) override;
+	virtual void TickState_Implementation() override;
+	virtual void OnExitState_Implementation() override;
+	virtual void PressJump_Implementation() override;
 };

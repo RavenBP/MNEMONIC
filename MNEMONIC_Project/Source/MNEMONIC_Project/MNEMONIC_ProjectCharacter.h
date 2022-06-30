@@ -23,10 +23,6 @@ class AMNEMONIC_ProjectCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-	/** Pawn mesh: 1st person view (arms; seen only by self) */
-	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
-	USkeletalMeshComponent* Mesh1P;
-
 	/** Gun mesh: 1st person view (seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	USkeletalMeshComponent* FP_Gun;
@@ -62,6 +58,10 @@ protected:
 
 public:
 
+	/** Pawn mesh: 1st person view (arms; seen only by self) */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Mesh)
+	USkeletalMeshComponent* Mesh1P;
+	
 	/** Location on gun mesh where projectiles should spawn. */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Mesh)
 		USceneComponent* FP_ShootOrigin;

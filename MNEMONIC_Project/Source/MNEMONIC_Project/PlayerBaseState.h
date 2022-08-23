@@ -19,6 +19,10 @@ class MNEMONIC_PROJECT_API UPlayerBaseState : public UIState
 public:
 	UPROPERTY(BlueprintReadOnly)
 	AMNEMONIC_ProjectCharacter* PlayerRef = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Slide)
+	float slideSpeedFactor;
+
 	ICustomPlayerControllerInterface* PlayerController = nullptr;
 	bool isRunning = false;
 	virtual void OnEnterState_Implementation(AActor* StateOwner) override;

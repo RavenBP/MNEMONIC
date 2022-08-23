@@ -30,7 +30,7 @@ void UPlayerSlidingState::OnExitState_Implementation()
 void UPlayerSlidingState::TickState_Implementation()
 {
 	Super::TickState_Implementation();
-	PlayerRef->GetMovementComponent()->Velocity = vInitialVelocity;
+	PlayerRef->GetMovementComponent()->Velocity = vInitialVelocity * slideSpeedFactor;
 	//if for some reason we are in the air after sliding we want to cancel the sliding
 	if(fTimer > 0.2f && !PlayerRef->GetCharacterMovement()->IsMovingOnGround())
 	{

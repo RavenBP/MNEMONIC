@@ -52,7 +52,7 @@ void UParkourMovementComponent::Update()
 		else if(type == PARKOUR_TYPE::VERTICAL)
 		{
 			GEngine->AddOnScreenDebugMessage(5, 0.1f, FColor::Green, TEXT("Vertically climbing."));
-			m_pCharacter->SetActorLocation(m_pCharacter->GetActorLocation() + climbDir * m_fRequiredSpeed * GetWorld()->GetDeltaSeconds());
+			m_pCharacter->SetActorLocation(m_pCharacter->GetActorLocation() + climbDir * m_fRequiredSpeed * m_pCharacter->m_PlayerStats.m_fMoveSpeed * GetWorld()->GetDeltaSeconds());
 
 			// Ledge climb when at the top of the climbable surface. Feels better without it atm, too fast/teleport-like.
 			// It also just uses Z axis which is not good considering the climbable could be any axis. Needs local-to-world Z axis of climbable.
